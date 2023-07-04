@@ -11,7 +11,7 @@ const Document = () => {
         {/* MetaLogo */}
         <link rel="shortcut icon" href={MetaLogo} />
         {/* theme meta */}
-        <meta name="theme-name" content="GirlsContentHub" />
+        <meta name="theme-name" content="Creative3Bx" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta
           name="theme-color"
