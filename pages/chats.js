@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../context";
 import { useRouter } from "next/router";
-import {ChatEngine} from 'react-chat-engine'
-
+import { ChatEngine } from 'react-chat-engine'
 
 export default function Home() {
   const { username, secret } = useContext(Context);
@@ -10,16 +9,16 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof document !== undefined) {
+    if (typeof document !== 'undefined') {
       setShowChat(true);
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (username === "" || secret === "") {
-       router.push("/");
+      router.push("/");
     }
-  }, [username, secret]);
+  }, [username, secret, router]); // Add 'router' to the dependency array
 
   if (!showChat) return <div />;
   return (
