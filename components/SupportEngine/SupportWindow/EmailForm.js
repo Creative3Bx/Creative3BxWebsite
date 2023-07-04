@@ -158,13 +158,16 @@ const EmailForm = (props) => {
           <br />
           {emailError && <div style={styles.errorEmailForm}>{emailError}</div>}
           <div
+            className="rounded-md bg-gray-100 px-6 py-4 text-lg shadow-md md:px-8 md:py-6 md:text-base lg:px-10 lg:py-8 lg:text-lg "
             style={
               emailError
                 ? { ...styles.bottomText, marginTop: "-20px" }
                 : styles.bottomText
             }
           >
-            Enter your Name and Email <br /> to get started
+            <p class="text-center leading-normal md:leading-snug">
+              Enter your name and email to get started
+            </p>
           </div>
           <button
             type="button"
