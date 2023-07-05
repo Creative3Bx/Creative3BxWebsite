@@ -6,14 +6,6 @@
   background-color: #7f1d1d !important;
 }
 
-.ce-chat-title-text {
-  color: #7f1d1d !important;
-}
-
-.ce-chat-subtitle-text {
-  color: #7f1d1d !important;
-  font-weight: 600;
-}
 
 #ce-send-message-button {
   position: relative !important;
@@ -37,6 +29,26 @@
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
 }
+.ce-chat-list-mobile-option, 
+.ce-chat-settings-mobile-option {
+
+  display: none;
+}
+
+@media (max-width: 767px) {
+.ce-chat-title{
+  background-color: #4A5162 !important;
+  margin-left: 56px !important;
+}
+}
+
+
+.ce-chat-subtitle-text {
+  font-size: 12px !important;
+  color: #7f1d1d !important;
+  font-weight: 600 !important;
+}
+
 
 .ql-editor {
   cursor: pointer;
