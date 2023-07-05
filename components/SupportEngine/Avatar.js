@@ -2,10 +2,11 @@ import React, { useMemo, useState, useEffect } from "react";
 import { styles } from "./styles";
 import ChatNotificationIcon from "./SupportWindow/ChatNotificationIcon";
 import Image from "next/image";
+import { RiCloseLine } from "react-icons/ri";
 
 const Avatar = (props) => {
   const [hovered, setHovered] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); // to show and hide the chat messsage 
+  const [isVisible, setIsVisible] = useState(false); // to show and hide the chat messsage
   const [isVisibleXImg, setisVisibleXImg] = useState(false); // to show and hide the chat messsage
   const [closeButtonHovered, setCloseButtonHovered] = useState(false);
   const selfImages = useMemo(
@@ -63,15 +64,17 @@ const Avatar = (props) => {
             }}
             style={{
               position: "absolute",
-              left: "-25px",
-              top: "0",
-              background: closeButtonHovered ? "#be232f" : "#7f1d1d",
+              left: "-20px",
+              top: "-10px",
+              background: closeButtonHovered ? "#7f1d1d" : "#8f0909",
               borderRadius: "50%",
-              padding: "10px",
+              padding: "5px",
               border: "none",
             }}
           >
-            <span className="text-lg text-white">🗙</span>
+            <span className="text-lg text-white">
+            <RiCloseLine style={{ fontSize: '1.5rem', color: 'white', fontWeight: 'bold',  }} />
+            </span>
           </button>
 
           <span className="rounded-lg text-sm shadow-md">
