@@ -256,7 +256,7 @@ const Contact = ({ data }) => {
                 </label>
                 <input
                   className="form-input w-full"
-                  name="from_name"
+                  name="from_BusinessName"
                   type="text"
                   placeholder=""
                 />
@@ -292,7 +292,7 @@ const Contact = ({ data }) => {
                 </label>
                 <input
                   className="form-input w-full"
-                  name="from_country"
+                  name="from_Address"
                   type="text"
                   placeholder=""
                 />
@@ -334,16 +334,21 @@ const Contact = ({ data }) => {
               </div>
               <div className="mb-6 hover:cursor-pointer">
                 <ReCAPTCHA
-                  sitekey="6LdwjnIkAAAAAON6qlbzYWN9fPew5-ChTSLTQFi8"
+                  sitekey={process.env.NEXT_PUBLIC_CE_GOOGLECAPCHA_SITEKEY}
                   onChange={onChange}
                 />
               </div>
 
               <input
-              onMouseEnter={() => setSendButtonHovered(true)}
-              onMouseLeave={() => setSendButtonHovered(false)}
-              style={{background: sendButtonHovered ? "#be232f" : "#7f1d1d"}}
-              className="btn btn-primary" type="submit" value="Send" />
+                onMouseEnter={() => setSendButtonHovered(true)}
+                onMouseLeave={() => setSendButtonHovered(false)}
+                style={{
+                  background: sendButtonHovered ? "#be232f" : "#7f1d1d",
+                }}
+                className="btn btn-primary"
+                type="submit"
+                value="Send Your Email ➤"
+              />
             </form>
             {/*
              */}
