@@ -36,11 +36,15 @@
 }
 
 @media (max-width: 767px) {
-.ce-chat-title{
-  background-color: #4A5162 !important;
-  margin-left: 56px !important;
-}
-}
+  .ce-chat-title{
+    background-color: #4A5162 !important;
+    margin-left: 56px !important;
+    
+  }
+  .ce-chat-title-text{
+    font-size: 20px !important;
+  }
+  }
 
 
 .ce-chat-subtitle-text {
