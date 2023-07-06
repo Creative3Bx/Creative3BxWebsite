@@ -14,26 +14,31 @@
 .ce-upload-document-form{
   height: 5px !important;
 }
-#ce-upload-document-button{
-  bottom: -10px !important;
-}
 #ce-send-message-button {
-  position: relative !important;
-  bottom: -45px !important;
-  right: -370px !important;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #7f1d1d !important;
+  transform: translateY(-10px);
+}
+
+.send-icon {
+  background-color: #7f1d1d !important;
+  margin-left: 8px !important;
+}
+
+#ce-upload-document-button {
+  position: fixed;
+  bottom: 110px;
+  right: 30px;
+  transform: translateY(-20px);
+  z-index: 1;
 }
 
 @media (max-width: 767px) {
   #ce-send-message-button {
-    position: relative !important;
-    bottom: -45px !important;
-    right: -290px !important;
-    background-color: #7f1d1d !important;
+    right: 10px;
   }
-}
-.send-icon{
-  background-color: #7f1d1d !important;
-  margin-left: 8px !important;
 }
 
 .ce-my-message-timestamp {
