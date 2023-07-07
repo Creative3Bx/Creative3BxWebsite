@@ -199,7 +199,7 @@ const Home = ({
               <video
                 width="100%"
                 className="rounded-lg"
-                src="/images/Creative3BxITServices1.mp4"
+                src="/images/Creative3BxITServices.mp4"
                 controls
               />
               <br />
