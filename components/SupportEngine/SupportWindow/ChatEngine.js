@@ -116,10 +116,12 @@ const ChatEngine = (props) => {
       }
     };
   
+    window.addEventListener('input', handleSpaceBarPress);
     window.addEventListener('keydown', handleSpaceBarPress);
     window.addEventListener('keydown', handleChaningSendBtnBGColor);
     // Cleanup: remove event listener when the component unmounts
     return () => {
+      window.removeEventListener('input', handleSpaceBarPress);
       window.removeEventListener('keydown', handleSpaceBarPress);
       window.removeEventListener('keydown', handleChaningSendBtnBGColor);
       
