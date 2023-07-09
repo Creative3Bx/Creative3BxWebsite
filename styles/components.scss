@@ -98,6 +98,7 @@
 //section-title
 .section-title {
   @apply mb-12 underline decoration-red-900 decoration-wavy decoration-2 underline-offset-[.5em];
+  line-height: 1.9; // Adjust the value as needed
 }
 
 //socials
