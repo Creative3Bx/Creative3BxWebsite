@@ -30,107 +30,115 @@ const ChatEngine = (props) => {
 );
   
   const [showChat, setShowChat] = useState(false);
-  var pElement;
-  function saveSelection(containerEl) {
-    let range = window.getSelection().getRangeAt(0);
-    let preSelectionRange = range.cloneRange();
-    preSelectionRange.selectNodeContents(containerEl);
-    preSelectionRange.setEnd(range.startContainer, range.startOffset);
-    let start = preSelectionRange.toString().length;
   
-    return {
-      start: start,
-      end: start + range.toString().length
-    };
-  }
+  // function saveSelection(containerEl) {
+  //   let range = window.getSelection().getRangeAt(0);
+  //   let preSelectionRange = range.cloneRange();
+  //   preSelectionRange.selectNodeContents(containerEl);
+  //   preSelectionRange.setEnd(range.startContainer, range.startOffset);
+  //   let start = preSelectionRange.toString().length;
   
-  function restoreSelection(containerEl, savedSel) {
-    let charIndex = 0, range = document.createRange();
-    range.setStart(containerEl, 0);
-    range.collapse(true);
-    let nodeStack = [containerEl], node, foundStart = false, stop = false;
+  //   return {
+  //     start: start,
+  //     end: start + range.toString().length
+  //   };
+  // }
   
-    while (!stop && (node = nodeStack.pop())) {
-      if (node.nodeType === 3) {
-        let nextCharIndex = charIndex + node.length;
-        if (!foundStart && savedSel.start >= charIndex && savedSel.start <= nextCharIndex) {
-          range.setStart(node, savedSel.start - charIndex);
-          foundStart = true;
-        }
-        if (foundStart && savedSel.end >= charIndex && savedSel.end <= nextCharIndex) {
-          range.setEnd(node, savedSel.end - charIndex);
-          stop = true;
-        }
-        charIndex = nextCharIndex;
-      } else {
-        let i = node.childNodes.length;
-        while (i--) {
-          nodeStack.push(node.childNodes[i]);
-        }
-      }
-    }
+  // function restoreSelection(containerEl, savedSel) {
+  //   let charIndex = 0, range = document.createRange();
+  //   range.setStart(containerEl, 0);
+  //   range.collapse(true);
+  //   let nodeStack = [containerEl], node, foundStart = false, stop = false;
   
-    let sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-  useEffect(() => {
+  //   while (!stop && (node = nodeStack.pop())) {
+  //     if (node.nodeType === 3) {
+  //       let nextCharIndex = charIndex + node.length;
+  //       if (!foundStart && savedSel.start >= charIndex && savedSel.start <= nextCharIndex) {
+  //         range.setStart(node, savedSel.start - charIndex);
+  //         foundStart = true;
+  //       }
+  //       if (foundStart && savedSel.end >= charIndex && savedSel.end <= nextCharIndex) {
+  //         range.setEnd(node, savedSel.end - charIndex);
+  //         stop = true;
+  //       }
+  //       charIndex = nextCharIndex;
+  //     } else {
+  //       let i = node.childNodes.length;
+  //       while (i--) {
+  //         nodeStack.push(node.childNodes[i]);
+  //       }
+  //     }
+  //   }
+  
+  //   let sel = window.getSelection();
+  //   sel.removeAllRanges();
+  //   sel.addRange(range);
+  // }
+  // useEffect(() => {
 
-    const handleChaningSendBtnBGColor = () => {
-      console.log('handleChaningSendBtnBGColor >>> +_+_+_+_');
-      const buttonElement = document.getElementById('ce-send-message-button');
-      const spanBtn = document.getElementsByClassName('anticon-arrow-up')[0];
-      const pElement = document.querySelector('.ql-editor p');
+  //   const handleChaningSendBtnBGColor = () => {
+  //     console.log('handleChaningSendBtnBGColor >>> +_+_+_+_');
+  //     const buttonElement = document.getElementById('ce-send-message-button');
+  //     const spanBtn = document.getElementsByClassName('anticon-arrow-up')[0];
+  //     const pElement = document.querySelector('.ql-editor p');
       
-      console.log('buttonElement >>', buttonElement);
-      if (buttonElement && pElement) {
-        // If there is no text inside the pElement, change the button color back to white
-        if (pElement.textContent.trim() === '') {
-          buttonElement.style.backgroundColor = '#7f1d1d';
-          spanBtn.style.color = '#edf2ec';
-          spanBtn.style.fontWeight = 'bold';
-        } else {
-          // If there is text inside the pElement, change the button color to '#fde9ef'
-          buttonElement.style.setProperty("background-color", "#7f1d1d", "important");
-          spanBtn.style.fontWeight = 'bold';
-        }
-      } else {
-        console.log('buttonElement does not exist.');
-      }
-    };
+  //     console.log('buttonElement >>', buttonElement);
+  //     if (buttonElement && pElement) {
+  //       // If there is no text inside the pElement, change the button color back to white
+  //       if (pElement.textContent.trim() === '') {
+  //         buttonElement.style.backgroundColor = '#7f1d1d';
+  //         spanBtn.style.color = '#edf2ec';
+  //         spanBtn.style.fontWeight = 'bold';
+  //       } else {
+  //         // If there is text inside the pElement, change the button color to '#fde9ef'
+  //         buttonElement.style.setProperty("background-color", "#7f1d1d", "important");
+  //         spanBtn.style.fontWeight = 'bold';
+  //       }
+  //     } else {
+  //       console.log('buttonElement does not exist.');
+  //     }
+  //   };
     
-    
-    
-    
-    
-    const handleSpaceBarPress = (event) => {
-      if (event.keyCode === 32) {
-        console.log('Space bar pressed +_+_+_+_');
-        const pElement = document.querySelector('.ql-editor p');
+  //   const handleSpaceBarPress = (event) => {
+  //     if (event.keyCode === 32) {
+  //       console.log('Space bar pressed +_+_+_+_');
+  //       const pElement = document.querySelector('.ql-editor p');
        
         
-        if (pElement) {
-          const savedSel = saveSelection(pElement);
-          pElement.textContent += ' ';
-          restoreSelection(pElement, savedSel);
-          console.log('pElement content after:', pElement.textContent);
-        } else {
-          console.log('pElement not found');
-        }
-      }
-    };
+  //       if (pElement) {
+  //         const savedSel = saveSelection(pElement);
+  //         pElement.textContent += ' ';
+  //         restoreSelection(pElement, savedSel);
+  //         console.log('pElement content after:', pElement.textContent);
+  //       } else {
+  //         console.log('pElement not found');
+  //       }
+  //     }
+  //   };
   
-    window.addEventListener('keydown', handleSpaceBarPress);
-    window.addEventListener('keydown', handleChaningSendBtnBGColor);
-    // Cleanup: remove event listener when the component unmounts
-    return () => {
-      window.removeEventListener('keydown', handleSpaceBarPress);
-      window.removeEventListener('keydown', handleChaningSendBtnBGColor);
+  //   window.addEventListener('keydown', handleSpaceBarPress);
+  //   window.addEventListener('keydown', handleChaningSendBtnBGColor);
+  //   // Cleanup: remove event listener when the component unmounts
+  //   return () => {
+  //     window.removeEventListener('keydown', handleSpaceBarPress);
+  //     window.removeEventListener('keydown', handleChaningSendBtnBGColor);
       
-    };
-  }, []);
-
- 
+  //   };
+  // }, []);
+/**I have problem so from the soultion above you have witten for me , in the tollbar of my support that there is button called ql-bold where i can set the text to bold , it workes when I set it to bold f however when i press space button its rest the test back to normal and it remove the space   */
+useEffect(() => {
+  const handlePressItalicButton = () => {
+  const button = document.querySelector('.ql-italic');
+    console.log('inside use Effect >> ', button )
+    if (button) {
+      button.click();
+    }
+    
+  }
+  window.addEventListener('keydown', handlePressItalicButton);
+  return () => {
+       window.removeEventListener('keydown', handlePressItalicButton);}
+}, []);
   useEffect(() => {
     if (props.visible) {
       setTimeout(() => {
