@@ -65,7 +65,7 @@ const Auth = () => {
 
           <div className="input-container">
             <input
-              placeholder="Email"
+              placeholder="username"
               className="text-input"
               onChange={(e) => setUsername(e.target.value)}
             />

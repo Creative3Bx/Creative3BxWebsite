@@ -12,6 +12,7 @@ import { markdownify } from "@lib/utils/textConverter";
 import Link from "next/link";
 import { FaRegCalendar } from "react-icons/fa";
 import styles from "../styles/genralstyles.module.css";
+import Head from 'next/head';
 
 const { blog_folder, pagination } = config.settings;
 
@@ -31,6 +32,10 @@ const Home = ({
   const showPosts = pagination;
 
   return (
+    <>
+    <Head>
+      {banner.image && <link rel="preload" href={banner.image} as="image" />}
+    </Head>
     <Base>
       {/* Banner */}
       <section className="section banner relative pb-0">
@@ -219,6 +224,7 @@ const Home = ({
         </div>
       </section>
     </Base>
+    </>
   );
 };
 
