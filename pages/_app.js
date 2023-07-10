@@ -12,6 +12,7 @@ import "../styles/auth.css";
 import "../styles/chats.css";
 import "../styles/auth.css";
 import { JsonContext } from "context/state";
+import { useRouter } from 'next/router';
 
 //import chatEngine components
 import SupportEngine from "components/SupportEngine";
@@ -20,6 +21,8 @@ import Router from "next/router";
 import Loader from "@layouts/components/Loader";
 
 const App = ({ Component, pageProps }) => {
+  // Get the current path.
+  const router = useRouter();
   // default theme setup
   const { default_theme } = config.settings;
 
@@ -82,7 +85,7 @@ const App = ({ Component, pageProps }) => {
       <ThemeProvider attribute="class" defaultTheme={default_theme}>
         <Component {...pageProps} />
       </ThemeProvider>
-      <SupportEngine/>
+      {router.pathname !== '/chats' && <SupportEngine />}
     </ContextProvider>
     </JsonContext>
     </>
