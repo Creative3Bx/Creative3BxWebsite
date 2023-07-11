@@ -1,6 +1,6 @@
 ---
 title: Welcome to Creative3Bx!
-video: /images/Creative3BxITServices.mp4
+video: https://drive.google.com/uc?export=view&id=1kj8J9MYSeExnqxSpaG8WIA3F8im5eHyF
 description: "about us"
 layout: about
 education: 

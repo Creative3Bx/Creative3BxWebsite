@@ -1,14 +1,15 @@
 import { markdownify } from "@lib/utils/textConverter";
 import shortcodes from "@shortcodes/all";
 import { MDXRemote } from "next-mdx-remote";
+import { NextScript } from "next/document";
+
 const About = ({ data }) => {
   const { frontmatter, mdxContent } = data;
   const { title, video, education, experience } = frontmatter;
-console.log("data About>>", data)
+
   return (
     <section className="section mt-16">
       <div className="container text-center">
-       
         {markdownify(title, "h1", "h1 text-left lg:text-[55px] mt-12")}
 
         <div className="content text-left">
@@ -16,14 +17,20 @@ console.log("data About>>", data)
         </div>
         {video && (
           <div className="mb-8">
-            <video width="100%"  className="rounded-lg" loop autoPlay  controls>
+            <video
+              width="100%"
+              className="rounded-lg"
+              loop
+              autoPlay
+              controls
+            >
               <source src={video} type="video/mp4" />
-              Sorry, your browser doesnt support videos.
+              {"Sorry, your browser doesn't support videos."}
             </video>
           </div>
         )}
         <div className="row mt-24 text-left lg:flex-nowrap">
-          <div className="lg:col-6 ">
+          <div className="lg:col-6">
             <div className="rounded border border-border p-6 dark:border-darkmode-border ">
               {markdownify(education.title, "h2", "section-title mb-12")}
               <div className="row">
