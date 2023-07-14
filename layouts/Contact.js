@@ -25,7 +25,7 @@ const Contact = ({ data }) => {
     Swal.fire({
       title: "<h3 style='color:#0e0e0e'>" + "Sweet!" + "</h3>",
       icon: "success",
-      text: "Thank you for reaching out to us! Our Auto Review Booster team will be in touch with you shortly.",
+      text: "Thank you for reaching out to us! Our Creative3Bx team will be in touch with you shortly.",
       imageUrl: "./images/ThanksMessage.gif",
       imageWidth: 300,
       imageHeight: 300,
