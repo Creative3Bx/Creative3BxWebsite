@@ -20,7 +20,7 @@ const EmailForm = (props) => {
     // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
     emailjs.sendForm(
       process.env.NEXT_PUBLIC_CE_Emailjs_SERVICE_ID,
-      process.env.NEXT_PUBLIC_CE_Emailjs_TEMPLATE_ID,
+      'template_3zxm8wa',
       form.current,
       process.env.NEXT_PUBLIC_CE_Emailjs_PUBLIC_KEY
     );
@@ -38,6 +38,7 @@ const EmailForm = (props) => {
 
   function getOrCreateChat(callback) {
     //  const message='Welcome to chat support , how can we help you today?'
+    //NEXT_PUBLIC_CE_USER_NAME
     axios
       .put(
         "https://api.chatengine.io/chats/",
@@ -68,7 +69,7 @@ const EmailForm = (props) => {
       return;
     } else {
       setLoading(true);
-      //sendEmail();
+      sendEmail();
     }
 
     //Now we need to call API function calls whenw e get a new email entered in chat box
@@ -146,6 +147,7 @@ const EmailForm = (props) => {
             onChange={(e) => setfirstName(e.target.value.toLowerCase())}
             placeholder="Your Name"
             type="text"
+            name="from_name"
             required
           />
           <input
@@ -153,12 +155,13 @@ const EmailForm = (props) => {
             onChange={(e) => setEmail(e.target.value.toLowerCase())}
             placeholder="Your Email"
             type="email"
+            name="from_email"
             required
           />
           <br />
           {emailError && <div style={styles.errorEmailForm}>{emailError}</div>}
           <div
-            className="rounded-md bg-gray-100 px-6 py-4 text-lg shadow-md md:px-8 md:py-6 md:text-base lg:px-10 lg:py-8 lg:text-lg "
+            className="rounded-md px-6 py-4 text-lg shadow-md md:px-8 md:py-6 md:text-base lg:px-10 lg:py-8 lg:text-lg "
             style={
               emailError
                 ? { ...styles.bottomText, marginTop: "-20px" }
@@ -200,7 +203,7 @@ const EmailForm = (props) => {
               </svg>
             </span>
           </button>
-         
+
           {/* <input tyle={styles.bottomText} type="button" value="X" /> */}
         </form>
       </div>
