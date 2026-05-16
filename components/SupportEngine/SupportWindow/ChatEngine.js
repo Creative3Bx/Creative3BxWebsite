@@ -5,30 +5,24 @@ import { IsTyping } from "react-chat-engine";
 
 import dynamic from "next/dynamic";
 
-const ChatEngine = (props) => {
-  /**
-   * So react chat engine need Dynamic importing because react chat engine use quill and that powered by salesfoce ,
-   * So its not supporting NxetJs nativily so we need to do dynamic import so we dont break the website
-   */
-  const ChatEngineWrapper = dynamic(() =>
-    import("react-chat-engine").then((module) => module.ChatEngineWrapper)
-  );
-  const Socket = dynamic(() =>
-    import("react-chat-engine").then((module) => module.Socket)
-  );
-  const ChatFeed = dynamic(() =>
-    import("react-chat-engine").then((module) => module.ChatFeed)
-  );
-  const NewMessageForm = dynamic(() =>
-    import("react-chat-engine").then((module) => module.NewMessageForm)
-  );
-  const MessageFormSocial = dynamic(() =>
-    import("react-chat-engine").then((module) => module.MessageFormSocial)
-  );
-  const MessageBubble = dynamic(() =>
-    import("react-chat-engine").then((module) => module.MessageBubble)
-  );
+const ChatEngineWrapper = dynamic(
+  () => import("react-chat-engine").then((module) => module.ChatEngineWrapper),
+  { ssr: false }
+);
+const Socket = dynamic(
+  () => import("react-chat-engine").then((module) => module.Socket),
+  { ssr: false }
+);
+const ChatFeed = dynamic(
+  () => import("react-chat-engine").then((module) => module.ChatFeed),
+  { ssr: false }
+);
+const NewMessageForm = dynamic(
+  () => import("react-chat-engine").then((module) => module.NewMessageForm),
+  { ssr: false }
+);
 
+const ChatEngine = (props) => {
   const [showChat, setShowChat] = useState(false);
 
   function saveSelection(containerEl) {

@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../context";
 import { useRouter } from "next/router";
-import { ChatEngine,MessageFormSocial } from 'react-chat-engine'
+import dynamic from "next/dynamic";
+
+const ChatEngine = dynamic(
+  () => import("react-chat-engine").then((module) => module.ChatEngine),
+  { ssr: false }
+);
+const MessageFormSocial = dynamic(
+  () => import("react-chat-engine").then((module) => module.MessageFormSocial),
+  { ssr: false }
+);
 
 export default function Home() {
   const { username, secret } = useContext(Context);
@@ -9,7 +18,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof document !== 'undefined') {
+    if (typeof document !== "undefined") {
       setShowChat(true);
     }
   }, [router]);
@@ -28,11 +37,11 @@ export default function Home() {
           height="calc(100vh - 212px)"
           projectID={process.env.NEXT_PUBLIC_CE_PROJECT_ID}
           userName={username}
-          userSecret={secret} 
-          renderNewMessageForm={() => <MessageFormSocial />}  
+          userSecret={secret}
+          renderNewMessageForm={() => <MessageFormSocial />}
         />
         {/* ce-chat-title-container */}
-         <style jsx global>{`
+        <style jsx global>{`
           @media (max-width: 767px) {
             .ce-chat-list-mobile-option {
               display: block !important;
