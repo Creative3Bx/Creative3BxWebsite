@@ -19,7 +19,7 @@ const Contact = ({ data }) => {
   const { frontmatter } = data;
   const { title, paragrph, form_action, phone, mail, location } = frontmatter;
   const form = useRef();
-  var GoogleCapcha = false;
+  const googleCaptchaRef = useRef(false);
   //Show Alert of successfull/ or failed
   const AlertSuccess = () => {
     Swal.fire({
@@ -64,10 +64,10 @@ const Contact = ({ data }) => {
   };
   //Google Recapcha
   const onChange = () => {
-    GoogleCapcha = true;
+    googleCaptchaRef.current = true;
   };
   const sendEmail = (e) => {
-    if (GoogleCapcha) {
+    if (googleCaptchaRef.current) {
       e.preventDefault();
       // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
       emailjs
