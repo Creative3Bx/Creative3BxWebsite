@@ -109,7 +109,7 @@ const ChatEngine = (props) => {
     };
 
     const handleSpaceBarPress = (event) => {
-      if (event.keyCode === 32) {
+      if (event.key === " ") {
         console.log("Space bar pressed +_+_+_+_");
         const pElement = document.querySelector(".ql-editor p");
 

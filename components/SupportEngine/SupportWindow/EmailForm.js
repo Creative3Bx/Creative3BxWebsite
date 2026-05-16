@@ -20,67 +20,64 @@ const EmailForm = (props) => {
     // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
     emailjs.sendForm(
       process.env.NEXT_PUBLIC_CE_Emailjs_SERVICE_ID,
-      'template_3zxm8wa',
+      process.env.NEXT_PUBLIC_CE_Emailjs_TEMPLATE_ID,
       form.current,
       process.env.NEXT_PUBLIC_CE_Emailjs_PUBLIC_KEY
     );
   };
-  function getOrCreateUser(callback) {
-    axios
-      .put(
-        "https://api.chatengine.io/users/",
-        { username: email, email: email, secret: email, first_name: firstName },
-        { headers: { "Private-Key": process.env.NEXT_PUBLIC_CE_PRIVATE_KEY } }
-      )
-      .then((r) => callback(r.data))
-      .catch((e) => console.log("Get or create user error", e));
-  }
+  const getOrCreateUser = async () => {
+    const response = await axios.put(
+      "https://api.chatengine.io/users/",
+      { username: email, email: email, secret: email, first_name: firstName },
+      { headers: { "Private-Key": process.env.NEXT_PUBLIC_CE_PRIVATE_KEY } }
+    );
+    return response.data;
+  };
 
-  function getOrCreateChat(callback) {
-    //  const message='Welcome to chat support , how can we help you today?'
-    //NEXT_PUBLIC_CE_USER_NAME
-    axios
-      .put(
-        "https://api.chatengine.io/chats/",
-        { usernames: [email, "Rami Tech Support"], is_direct_chat: true },
-        {
-          headers: {
-            "Project-ID": process.env.NEXT_PUBLIC_CE_PROJECT_ID,
-            "User-Name": email,
-            "User-Secret": email,
-          },
-        }
-      )
-      .then((r) => callback(r.data))
-      .catch((e) => console.log("Get or create chat error", e));
-  }
+  const getOrCreateChat = async () => {
+    const response = await axios.put(
+      "https://api.chatengine.io/chats/",
+      { usernames: [email, "Creative3Bx Support"], is_direct_chat: true },
+      {
+        headers: {
+          "Project-ID": process.env.NEXT_PUBLIC_CE_PROJECT_ID,
+          "User-Name": email,
+          "User-Secret": email,
+        },
+      }
+    );
+    return response.data;
+  };
   function validateEmail(email) {
-    const providerPattern =
-      /@(gmail|yahoo|hotmail|aol|icloud|zoho|protonmail|mail|gmx|yandex)\./;
-    const tldPattern =
-      /\.(com|net|org|edu|gov|mil|co|io|me|info|[a-z]{2}\.[a-z]{2}|[a-z]{2,})$/i;
-    return providerPattern.test(email) && tldPattern.test(email);
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  const handleSubmit = async (event) => {
+    if (event) event.preventDefault();
+
     if (!validateEmail(email)) {
       setEmailError("Please enter a valid email address.");
       return;
-    } else {
-      setLoading(true);
-      sendEmail();
     }
 
-    //Now we need to call API function calls whenw e get a new email entered in chat box
-    getOrCreateUser((user) => {
-      props.setUser && props.setUser(user);
-      getOrCreateChat((chat) => {
-        setLoading(false);
-        props.setChat && props.setChat(chat);
-      });
-    });
-  }
+    setLoading(true);
+    setEmailError("");
+
+    try {
+      sendEmail();
+      const user = await getOrCreateUser();
+      props.setUser?.(user);
+
+      const chat = await getOrCreateChat();
+      props.setChat?.(chat);
+    } catch (error) {
+      console.error("Support initialization error:", error);
+      setEmailError("Failed to start chat. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
