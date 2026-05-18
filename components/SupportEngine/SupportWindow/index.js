@@ -48,13 +48,7 @@ const SupportWindow = (props) => {
       />
 
       {user !== null && chat !== null && (
-        <div>
-          <ChatEngine
-            visible={user !== null || chat !== null}
-            chat={chat}
-            user={user}
-          />
-        </div>
+        <ChatEngine visible={true} chat={chat} user={user} />
       )}
     </div>
   );

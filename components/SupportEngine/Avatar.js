@@ -40,6 +40,9 @@ const Avatar = (props) => {
   }, [showSocialMenu, props.isWindowVisible]);
 
   const handleClick = () => {
+    // Only allow interaction if an onClick handler is passed (prevents the header image in EmailForm from being clickable)
+    if (!props.onClick) return;
+
     if (showSocialMenu) {
       // Closing: Close chat window if open and reset avatar
       if (props.isWindowVisible) props.onClick?.();
@@ -69,8 +72,8 @@ const Avatar = (props) => {
           gap: "12px",
           paddingBottom: "20px",
           transition: "opacity 0.3s ease-in-out",
-          opacity: showSocialMenu ? 1 : 0,
-          pointerEvents: showSocialMenu ? "auto" : "none",
+          opacity: showSocialMenu && props.onClick ? 1 : 0,
+          pointerEvents: showSocialMenu && props.onClick ? "auto" : "none",
         }}
       >
         {/* WhatsApp */}
