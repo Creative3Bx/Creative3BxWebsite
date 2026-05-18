@@ -12,7 +12,6 @@ import "../styles/auth.css";
 import "../styles/chats.css";
 import "../styles/auth.css";
 import { JsonContext } from "context/state";
-import { useRouter } from 'next/router';
 
 //import chatEngine components
 import SupportEngine from "components/SupportEngine";
@@ -21,8 +20,6 @@ import Router from "next/router";
 import Loader from "@layouts/components/Loader";
 
 const App = ({ Component, pageProps }) => {
-  // Get the current path.
-  const router = useRouter();
   // default theme setup
   const { default_theme } = config.settings;
 
@@ -51,43 +48,42 @@ const App = ({ Component, pageProps }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // Routing and loading Icon
-  const [loading , setLoading] = useState(false)
-  Router.events.on("routeChangeStart", (url)=>{
+  const [loading, setLoading] = useState(false);
+  Router.events.on("routeChangeStart", (url) => {
     setLoading(true);
-  })
-  Router.events.on("routeChangeComplete", (url)=>{
+  });
+  Router.events.on("routeChangeComplete", (url) => {
     setLoading(false);
-  })
+  });
   return (
     <>
-    <JsonContext>
-    {loading && <Loader/>}
-    <ContextProvider>
-      
-      <Head>
-        {/* google font css */}
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="true"
-        />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `${fontcss}`,
-          }}
-        />
-        {/* responsive meta */}
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=5"
-        />
-      </Head>
-      <ThemeProvider attribute="class" defaultTheme={default_theme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
-      {router.pathname !== '/chats' && <SupportEngine />}
-    </ContextProvider>
-    </JsonContext>
+      <JsonContext>
+        {loading && <Loader />}
+        <ContextProvider>
+          <Head>
+            {/* google font css */}
+            <link
+              rel="preconnect"
+              href="https://fonts.gstatic.com"
+              crossOrigin="true"
+            />
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `${fontcss}`,
+              }}
+            />
+            {/* responsive meta */}
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1, maximum-scale=5"
+            />
+          </Head>
+          <ThemeProvider attribute="class" defaultTheme="dark">
+            <Component {...pageProps} />
+          </ThemeProvider>
+          <SupportEngine />
+        </ContextProvider>
+      </JsonContext>
     </>
   );
 };

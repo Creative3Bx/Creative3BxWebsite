@@ -33,7 +33,7 @@ const SupportEngine = () => {
   };
   return (
     <div ref={ref}>
-      <SupportWindow visible={visible} />
+      <SupportWindow visible={visible} onClose={() => setVisible(false)} />
       <Avatar
         onClick={handleShowSuportWindow}
         style={{
@@ -42,6 +42,7 @@ const SupportEngine = () => {
           right: "24px",
         }}
         visibleNotification={visibleNotification}
+        isWindowVisible={visible}
       />
     </div>
   );

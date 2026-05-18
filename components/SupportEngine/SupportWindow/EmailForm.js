@@ -5,9 +5,9 @@ import stylesStartBtn from "../../../styles/genralstyles.module.css";
 // we must install npm install @ant-design/icons
 
 import { LoadingOutlined } from "@ant-design/icons";
-import Avatar from "../Avatar";
 import axios from "axios";
 import emailjs from "@emailjs/browser"; // npm install @emailjs/browser
+import ReCAPTCHA from "react-google-recaptcha";
 
 const EmailForm = (props) => {
   const [email, setEmail] = useState("");
@@ -15,16 +15,18 @@ const EmailForm = (props) => {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
   const form = useRef();
+  const recaptchaRef = useRef();
+  const [captchaToken, setCaptchaToken] = useState(null);
 
-  const sendEmail = (e) => {
-    // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
-    emailjs.sendForm(
+  const sendEmail = async () => {
+    return emailjs.sendForm(
       process.env.NEXT_PUBLIC_CE_Emailjs_SERVICE_ID,
       process.env.NEXT_PUBLIC_CE_Emailjs_TEMPLATE_ID,
       form.current,
       process.env.NEXT_PUBLIC_CE_Emailjs_PUBLIC_KEY
     );
   };
+
   const getOrCreateUser = async () => {
     const response = await axios.put(
       "https://api.chatengine.io/users/",
@@ -53,6 +55,10 @@ const EmailForm = (props) => {
     return re.test(email);
   }
 
+  const onCaptchaChange = (value) => {
+    setCaptchaToken(value);
+  };
+
   const handleSubmit = async (event) => {
     if (event) event.preventDefault();
 
@@ -61,19 +67,35 @@ const EmailForm = (props) => {
       return;
     }
 
+    if (!captchaToken) {
+      setEmailError("Please verify that you are not a robot.");
+      return;
+    }
+
     setLoading(true);
     setEmailError("");
 
     try {
-      sendEmail();
+      await sendEmail();
+
       const user = await getOrCreateUser();
       props.setUser?.(user);
 
       const chat = await getOrCreateChat();
       props.setChat?.(chat);
+
+      setCaptchaToken(null);
+      recaptchaRef.current?.reset();
     } catch (error) {
-      console.error("Support initialization error:", error);
-      setEmailError("Failed to start chat. Please try again.");
+      console.error("Support Error:", error);
+
+      if (error?.text?.includes("Gmail_API")) {
+        setEmailError(
+          "System Error: Email service needs reconnection. Please contact support."
+        );
+      } else {
+        setEmailError("Failed to start chat. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -122,14 +144,6 @@ const EmailForm = (props) => {
           textAlign: "center",
         }}
       >
-        <Avatar
-          style={{
-            position: "relative",
-            left: "calc(50% - 44px)",
-            top: "10%",
-          }}
-        />
-
         <div style={styles.topText}>
           Welcome 👋
           <br /> How can we help you ?
@@ -155,6 +169,20 @@ const EmailForm = (props) => {
             name="from_email"
             required
           />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "10px",
+            }}
+          >
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              size="compact"
+              sitekey={process.env.NEXT_PUBLIC_CE_GOOGLECAPCHA_SITEKEY}
+              onChange={onCaptchaChange}
+            />
+          </div>
           <br />
           {emailError && <div style={styles.errorEmailForm}>{emailError}</div>}
           <div
