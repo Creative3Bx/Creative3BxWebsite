@@ -10,10 +10,6 @@ export const styles = {
     // Size
     width: "84px",
     height: "84px",
-    transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-    "&:hover": {
-      transform: "scale(1.05)",
-    },
   },
   chatWithMeButtonImage: {
     cursor: "pointer",
@@ -26,7 +22,6 @@ export const styles = {
     backgroundSize: "84px",
     width: "100%",
     height: "100%",
-    transition: "transform 0.2s ease-in-out",
   },
   avatarHello: {
     position: "absolute",
@@ -45,22 +40,20 @@ export const styles = {
   avatarNotifyMessage: {
     // Position
     position: "absolute",
-    display: "flex",
-    flexDirection: "column",
-    top: "-118px",
-    left: "-255px",
-    width: "280px",
+    display: "inline-block",
+    borderBottom: "1px dotted black",
+    top: "-150px", // position it above the circle
+    left: "calc(-100% - 44px - 28px)", // position it to the left of the circle
+    right: "30px",
     // Layering
     zIndex: "10000",
-    boxShadow:
-      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    boxShadow: "0px 0px 16px 6px rgba(0, 0, 0, 0.33)",
     // Border
-    padding: "16px",
-    borderRadius: "16px",
+    padding: "12px 12px 12px 16px",
+    borderRadius: "24px",
     // Color
-    backgroundColor: "white",
+    backgroundColor: "#dcdee2",
     color: "black",
-    border: "1px solid #f3f4f6",
   },
   tooltiptext: {},
   supportWindow: {
@@ -133,7 +126,6 @@ export const styles = {
     fontWeight: "600",
   },
   submitButton: {
-    // Position
     position: "absolute",
     bottom: "24px",
     width: "190px",

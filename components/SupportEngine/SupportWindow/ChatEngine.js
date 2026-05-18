@@ -164,16 +164,13 @@ const ChatEngine = (props) => {
     <div
       className="transition-5"
       style={{
-        ...styles.supportWindow,
-        ...{
-          height: props.visible ? "530px" : "0px",
-          width: props.visible ? "420px" : "0px",
-          zIndex: props.visible ? "100" : "0",
-        },
+        height: props.visible ? "100%" : "0px",
+        width: "100%",
+        backgroundColor: "white",
       }}
     >
       {showChat && (
-        <ChatEngineWrapper style={styles.supportWindow}>
+        <ChatEngineWrapper>
           <Socket
             projectID={process.env.NEXT_PUBLIC_CE_PROJECT_ID}
             userName={props.user.email}
