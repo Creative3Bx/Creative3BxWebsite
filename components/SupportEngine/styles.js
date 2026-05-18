@@ -10,6 +10,10 @@ export const styles = {
     // Size
     width: "84px",
     height: "84px",
+    transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+    "&:hover": {
+      transform: "scale(1.05)",
+    },
   },
   chatWithMeButtonImage: {
     cursor: "pointer",
@@ -20,13 +24,11 @@ export const styles = {
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     backgroundSize: "84px",
-    // Size
     width: "100%",
     height: "100%",
-    
+    transition: "transform 0.2s ease-in-out",
   },
   avatarHello: {
-    // Position
     position: "absolute",
     left: "calc(-100% - 44px - 28px)",
     top: "calc(50% - 24px)",
@@ -43,24 +45,24 @@ export const styles = {
   avatarNotifyMessage: {
     // Position
     position: "absolute",
-    display: "inline-block",
-    borderBottom: "1px dotted black",
-    top: "-150px",  // position it above the circle
-    left: "calc(-100% - 44px - 28px)",  // position it to the left of the circle
-    right:"30px",
+    display: "flex",
+    flexDirection: "column",
+    top: "-118px",
+    left: "-255px",
+    width: "280px",
     // Layering
     zIndex: "10000",
-    boxShadow: "0px 0px 16px 6px rgba(0, 0, 0, 0.33)",
+    boxShadow:
+      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
     // Border
-    padding: "12px 12px 12px 16px",
-    borderRadius: "24px",
+    padding: "16px",
+    borderRadius: "16px",
     // Color
-    backgroundColor: "#dcdee2",
+    backgroundColor: "white",
     color: "black",
+    border: "1px solid #f3f4f6",
   },
-  tooltiptext:{
-
-  },
+  tooltiptext: {},
   supportWindow: {
     position: "fixed",
     bottom: "116px",
@@ -75,7 +77,7 @@ export const styles = {
     overflow: "hidden",
     boxShadow: "0px 0px 16px 6px rgba(0, 0, 0, 0.33)",
   },
-  
+
   chatContent: {
     flex: "1",
     overflow: "auto",
@@ -119,8 +121,8 @@ export const styles = {
     padding: "12px",
     borderRadius: "12px",
     border: "2px solid #7f1d1d",
-    backgroundColor:"#181818",
-    color:"#fff"
+    backgroundColor: "#181818",
+    color: "#fff",
   },
   bottomText: {
     position: "absolute",
@@ -129,7 +131,6 @@ export const styles = {
     color: "#7f1d1d",
     fontSize: "24px",
     fontWeight: "600",
- 
   },
   submitButton: {
     // Position
@@ -141,7 +142,7 @@ export const styles = {
     cursor: "pointer",
     transition: "background-color 0.3s ease",
     top: "200%",
-    left:"28%"
+    left: "28%",
   },
 
   loadingDiv: {
@@ -160,7 +161,7 @@ export const styles = {
   },
   chatEngineWindow: {
     width: "100%",
-    height:"300px",
+    height: "300px",
     overflow: "hidden",
     backgroundColor: "#fff",
   },
@@ -176,12 +177,12 @@ export const styles = {
     position: "absolute",
   },
   closeWindowButton: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    color: '#eeb42b',
-    fontSize: '18px',
-    position: 'absolute',
+    backgroundColor: "transparent",
+    border: "none",
+    cursor: "pointer",
+    color: "#eeb42b",
+    fontSize: "18px",
+    position: "absolute",
     // top: '230px',
     // right: '-80px',
     // zIndex: 1,
@@ -197,5 +198,23 @@ export const styles = {
   errorEmailForm: {
     color: "red",
     fontWeight: "bold",
+  },
+  subActionButton: {
+    width: "56px",
+    height: "56px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.25)",
+    transition:
+      "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease, background-color 0.2s ease",
+    border: "none",
+    textDecoration: "none",
+    marginLeft: "auto",
+    "&:hover": {
+      transform: "scale(1.1) translateY(-2px)",
+    },
   },
 };

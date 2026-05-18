@@ -16,7 +16,14 @@ const About = ({ data }) => {
         </div>
         {video && (
           <div className="mb-8">
-            <video width="100%" className="rounded-lg" loop autoPlay controls>
+            <video
+              width="100%"
+              className="rounded-lg"
+              loop
+              autoPlay
+              muted
+              controls
+            >
               <source src={video} type="video/mp4" />
               {"Sorry, your browser doesn't support videos."}
             </video>

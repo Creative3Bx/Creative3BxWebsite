@@ -19,9 +19,9 @@ const Auth = () => {
       if (response.status === 200) {
         const usersData = response.data;
         filteredUsers = usersData.filter(
-          (user) => user.email === "ramiAlzuhairi89@gmail.com"
+          (user) => user.username === process.env.NEXT_PUBLIC_CE_USER_NAME
         );
-        
+
         if (filteredUsers.length > 0) {
           // User exists, allow login to chats
           router.push("/chats");
@@ -42,7 +42,7 @@ const Auth = () => {
     e.preventDefault();
     if (username.length === 0 || secret.length === 0) return;
 
-    if (username === "Rami Tech Support") {
+    if (username === process.env.NEXT_PUBLIC_CE_USER_NAME) {
       axios
         .put(
           "https://api.chatengine.io/users/",

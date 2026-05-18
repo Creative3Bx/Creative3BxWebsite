@@ -5,9 +5,9 @@ import stylesStartBtn from "../../../styles/genralstyles.module.css";
 // we must install npm install @ant-design/icons
 
 import { LoadingOutlined } from "@ant-design/icons";
-import Avatar from "../Avatar";
 import axios from "axios";
 import emailjs from "@emailjs/browser"; // npm install @emailjs/browser
+import ReCAPTCHA from "react-google-recaptcha";
 
 const EmailForm = (props) => {
   const [email, setEmail] = useState("");
@@ -15,72 +15,91 @@ const EmailForm = (props) => {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
   const form = useRef();
+  const recaptchaRef = useRef();
+  const [captchaToken, setCaptchaToken] = useState(null);
 
-  const sendEmail = (e) => {
-    // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
-    emailjs.sendForm(
+  const sendEmail = async () => {
+    return emailjs.sendForm(
       process.env.NEXT_PUBLIC_CE_Emailjs_SERVICE_ID,
-      'template_3zxm8wa',
+      process.env.NEXT_PUBLIC_CE_Emailjs_TEMPLATE_ID,
       form.current,
       process.env.NEXT_PUBLIC_CE_Emailjs_PUBLIC_KEY
     );
   };
-  function getOrCreateUser(callback) {
-    axios
-      .put(
-        "https://api.chatengine.io/users/",
-        { username: email, email: email, secret: email, first_name: firstName },
-        { headers: { "Private-Key": process.env.NEXT_PUBLIC_CE_PRIVATE_KEY } }
-      )
-      .then((r) => callback(r.data))
-      .catch((e) => console.log("Get or create user error", e));
-  }
 
-  function getOrCreateChat(callback) {
-    //  const message='Welcome to chat support , how can we help you today?'
-    //NEXT_PUBLIC_CE_USER_NAME
-    axios
-      .put(
-        "https://api.chatengine.io/chats/",
-        { usernames: [email, "Rami Tech Support"], is_direct_chat: true },
-        {
-          headers: {
-            "Project-ID": process.env.NEXT_PUBLIC_CE_PROJECT_ID,
-            "User-Name": email,
-            "User-Secret": email,
-          },
-        }
-      )
-      .then((r) => callback(r.data))
-      .catch((e) => console.log("Get or create chat error", e));
-  }
+  const getOrCreateUser = async () => {
+    const response = await axios.put(
+      "https://api.chatengine.io/users/",
+      { username: email, email: email, secret: email, first_name: firstName },
+      { headers: { "Private-Key": process.env.NEXT_PUBLIC_CE_PRIVATE_KEY } }
+    );
+    return response.data;
+  };
+
+  const getOrCreateChat = async () => {
+    const response = await axios.put(
+      "https://api.chatengine.io/chats/",
+      { usernames: [email, "Creative3Bx Support"], is_direct_chat: true },
+      {
+        headers: {
+          "Project-ID": process.env.NEXT_PUBLIC_CE_PROJECT_ID,
+          "User-Name": email,
+          "User-Secret": email,
+        },
+      }
+    );
+    return response.data;
+  };
   function validateEmail(email) {
-    const providerPattern =
-      /@(gmail|yahoo|hotmail|aol|icloud|zoho|protonmail|mail|gmx|yandex)\./;
-    const tldPattern =
-      /\.(com|net|org|edu|gov|mil|co|io|me|info|[a-z]{2}\.[a-z]{2}|[a-z]{2,})$/i;
-    return providerPattern.test(email) && tldPattern.test(email);
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  const onCaptchaChange = (value) => {
+    setCaptchaToken(value);
+  };
+
+  const handleSubmit = async (event) => {
+    if (event) event.preventDefault();
+
     if (!validateEmail(email)) {
       setEmailError("Please enter a valid email address.");
       return;
-    } else {
-      setLoading(true);
-      sendEmail();
     }
 
-    //Now we need to call API function calls whenw e get a new email entered in chat box
-    getOrCreateUser((user) => {
-      props.setUser && props.setUser(user);
-      getOrCreateChat((chat) => {
-        setLoading(false);
-        props.setChat && props.setChat(chat);
-      });
-    });
-  }
+    if (!captchaToken) {
+      setEmailError("Please verify that you are not a robot.");
+      return;
+    }
+
+    setLoading(true);
+    setEmailError("");
+
+    try {
+      await sendEmail();
+
+      const user = await getOrCreateUser();
+      props.setUser?.(user);
+
+      const chat = await getOrCreateChat();
+      props.setChat?.(chat);
+
+      setCaptchaToken(null);
+      recaptchaRef.current?.reset();
+    } catch (error) {
+      console.error("Support Error:", error);
+
+      if (error?.text?.includes("Gmail_API")) {
+        setEmailError(
+          "System Error: Email service needs reconnection. Please contact support."
+        );
+      } else {
+        setEmailError("Failed to start chat. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -125,14 +144,6 @@ const EmailForm = (props) => {
           textAlign: "center",
         }}
       >
-        <Avatar
-          style={{
-            position: "relative",
-            left: "calc(50% - 44px)",
-            top: "10%",
-          }}
-        />
-
         <div style={styles.topText}>
           Welcome 👋
           <br /> How can we help you ?
@@ -158,6 +169,20 @@ const EmailForm = (props) => {
             name="from_email"
             required
           />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "10px",
+            }}
+          >
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              size="compact"
+              sitekey={process.env.NEXT_PUBLIC_CE_GOOGLECAPCHA_SITEKEY}
+              onChange={onCaptchaChange}
+            />
+          </div>
           <br />
           {emailError && <div style={styles.errorEmailForm}>{emailError}</div>}
           <div

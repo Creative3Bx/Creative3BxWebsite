@@ -19,7 +19,9 @@ const Contact = ({ data }) => {
   const { frontmatter } = data;
   const { title, paragrph, form_action, phone, mail, location } = frontmatter;
   const form = useRef();
-  var GoogleCapcha = false;
+  const recaptchaRef = useRef();
+  const [captchaToken, setCaptchaToken] = useState(null);
+
   //Show Alert of successfull/ or failed
   const AlertSuccess = () => {
     Swal.fire({
@@ -35,12 +37,14 @@ const Contact = ({ data }) => {
     });
   };
 
-  const AlertFail = () => {
+  const AlertFail = (errorText) => {
     Swal.fire({
       icon: "error",
       title: "<h3 style='color:#0e0e0e'>" + "Oops..." + "</h3>",
-      text: "Something went wrong!",
-      footer: '<a href="">Why do I have this issue?</a>',
+      text: "Something went wrong while sending your message.",
+      footer: `<span style="color: #7f1d1d">Error: ${
+        errorText || "Unknown Connection Error"
+      }</span>`,
     });
   };
 
@@ -63,12 +67,14 @@ const Contact = ({ data }) => {
     });
   };
   //Google Recapcha
-  const onChange = () => {
-    GoogleCapcha = true;
+  const onChange = (value) => {
+    setCaptchaToken(value);
   };
+
   const sendEmail = (e) => {
-    if (GoogleCapcha) {
-      e.preventDefault();
+    e.preventDefault();
+
+    if (captchaToken) {
       // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
       emailjs
         .sendForm(
@@ -82,16 +88,20 @@ const Contact = ({ data }) => {
             console.log(result.text);
             AlertSuccess();
             // reset the form after submit
+            setCaptchaToken(null);
+            recaptchaRef.current.reset();
             e.target.reset();
           },
           (error) => {
-            AlertFail();
-            console.log(error.text);
+            AlertFail(error.text);
+            console.error("EmailJS Error Details:", error);
+            // Reset captcha on failure so they can try again with a fresh token
+            setCaptchaToken(null);
+            recaptchaRef.current.reset();
           }
         );
     } else {
       AlertGooglerecapcha();
-      e.preventDefault();
     }
   };
   return (
@@ -334,6 +344,7 @@ const Contact = ({ data }) => {
               </div>
               <div className="mb-6 hover:cursor-pointer">
                 <ReCAPTCHA
+                  ref={recaptchaRef}
                   sitekey={process.env.NEXT_PUBLIC_CE_GOOGLECAPCHA_SITEKEY}
                   onChange={onChange}
                 />
