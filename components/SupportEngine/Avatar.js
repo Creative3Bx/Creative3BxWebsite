@@ -16,7 +16,7 @@ const SELF_IMAGES = [
   "/images/chatEngineImgs/self4Sarah.png",
 ];
 
-const getRandomFace = () =>
+export const getRandomFace = () =>
   SELF_IMAGES[Math.floor(Math.random() * SELF_IMAGES.length)];
 
 const Avatar = (props) => {
@@ -25,8 +25,8 @@ const Avatar = (props) => {
   const [showSocialMenu, setShowSocialMenu] = useState(false);
   const [closeButtonHovered, setCloseButtonHovered] = useState(false);
 
-  // Initialize with a face to prevent Next.js Image component from receiving an empty src
-  const [randomImage, setRandomImage] = useState(SELF_IMAGES[0]);
+  // Initialize with a random face as fallback
+  const [randomImage, setRandomImage] = useState(getRandomFace());
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,14 +46,12 @@ const Avatar = (props) => {
     if (showSocialMenu) {
       // Closing: Close chat window if open and reset avatar
       if (props.isWindowVisible) props.onClick?.();
-      setRandomImage(getRandomFace());
       setShowSocialMenu(false);
       setShowNotification(true);
     } else {
       // Opening: Show social menu, hide notification, show close icon
       setShowSocialMenu(true);
       setShowNotification(false);
-      setRandomImage("/images/closeButton1.png");
     }
   };
 
@@ -78,7 +76,7 @@ const Avatar = (props) => {
       >
         {/* WhatsApp */}
         <a
-          href="https://wa.me/61431449645"
+          href="https://wa.me/61494743131"
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -245,7 +243,11 @@ const Avatar = (props) => {
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <Image
             style={styles.chatWithMeButtonImage}
-            src={randomImage}
+            src={
+              showSocialMenu
+                ? "/images/closeButton1.png"
+                : props.avatar || randomImage
+            }
             alt="Avatar Image"
             layout="fill"
             objectFit="cover"

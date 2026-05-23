@@ -18,6 +18,7 @@ import SupportEngine from "components/SupportEngine";
 // Import Router for loading Icon
 import Router from "next/router";
 import Loader from "@layouts/components/Loader";
+import Script from "next/script";
 
 const App = ({ Component, pageProps }) => {
   // default theme setup
@@ -58,6 +59,28 @@ const App = ({ Component, pageProps }) => {
   return (
     <>
       <JsonContext>
+        <Script id="chatwoot-settings" strategy="afterInteractive">
+          {`
+            window.chatwootSettings = {
+              hideMessageBubble: true,
+              position: 'right',
+              type: 'standard',
+            };
+            (function(d,t) {
+              var BASE_URL="https://app.chatwoot.com";
+              var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+              g.src=BASE_URL+"/packs/js/sdk.js";
+              g.async = true;
+              s.parentNode.insertBefore(g,s);
+              g.onload=function(){
+                window.chatwootSDK.run({
+                  websiteToken: 'cua7BbPuYPA1Nd7VTz1jUVaW',
+                  baseUrl: BASE_URL
+                })
+              }
+            })(document,"script");
+          `}
+        </Script>
         {loading && <Loader />}
         <ContextProvider>
           <Head>

@@ -3,16 +3,15 @@ import Link from "next/link";
 import { BsArrowRightShort } from "react-icons/bs";
 import { FaUserAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import ImageFallback from "./components/ImageFallback";
-import React, { useRef, useState } from "react";
-//import  useState from "react"
-import emailjs from "@emailjs/browser";
+import React, { useRef, useState, useMemo } from "react";
 import Swal from "sweetalert2";
 import ReCAPTCHA from "react-google-recaptcha";
+import { sendContactEmail } from "./sendEmail";
 
 const Contact = ({ data }) => {
-  const [selected, setSelected] = React.useState(new Set(["Instagram"]));
+  const [selected, setSelected] = useState(new Set(["Instagram"]));
   const [sendButtonHovered, setSendButtonHovered] = useState(false);
-  const selectedValue = React.useMemo(
+  const selectedValue = useMemo(
     () => Array.from(selected).join(", ").replaceAll("_", " "),
     [selected]
   );
@@ -71,37 +70,37 @@ const Contact = ({ data }) => {
     setCaptchaToken(value);
   };
 
-  const sendEmail = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (captchaToken) {
-      // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
-      emailjs
-        .sendForm(
-          process.env.NEXT_PUBLIC_CE_Emailjs_SERVICE_ID,
-          process.env.NEXT_PUBLIC_CE_Emailjs_TEMPLATE_ID,
-          form.current,
-          process.env.NEXT_PUBLIC_CE_Emailjs_PUBLIC_KEY
-        )
-        .then(
-          (result) => {
-            console.log(result.text);
-            AlertSuccess();
-            // reset the form after submit
-            setCaptchaToken(null);
-            recaptchaRef.current.reset();
-            e.target.reset();
-          },
-          (error) => {
-            AlertFail(error.text);
-            console.error("EmailJS Error Details:", error);
-            // Reset captcha on failure so they can try again with a fresh token
-            setCaptchaToken(null);
-            recaptchaRef.current.reset();
-          }
-        );
-    } else {
+    if (!captchaToken) {
       AlertGooglerecapcha();
+      return;
+    }
+
+    const formData = new FormData(form.current);
+    const payload = Object.fromEntries(formData.entries());
+
+    console.log("[Debug] Contact Form Submission initiated:", payload);
+
+    try {
+      const result = await sendContactEmail(payload);
+
+      if (result.success) {
+        AlertSuccess();
+        // reset the form after submit
+        setCaptchaToken(null);
+        recaptchaRef.current.reset();
+        e.target.reset();
+      } else {
+        AlertFail(result.error);
+        setCaptchaToken(null);
+        recaptchaRef.current.reset();
+      }
+    } catch (error) {
+      AlertFail("Network error, please try again.");
+      setCaptchaToken(null);
+      recaptchaRef.current.reset();
     }
   };
   return (
@@ -134,7 +133,7 @@ const Contact = ({ data }) => {
             <form
               className="contact-form mt-12"
               ref={form}
-              onSubmit={sendEmail}
+              onSubmit={handleFormSubmit}
             >
               <div className="mb-6">
                 <label className="mb-2 block font-secondary" htmlFor="name">
@@ -211,20 +210,7 @@ const Contact = ({ data }) => {
                 <label className="mb-2 block font-secondary" htmlFor="email">
                   <div className="flex space-x-1">
                     <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="h-6 w-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-                        />
-                      </svg>
+                      <FaEnvelope className="h-6 w-6" />
                     </div>
                     <div>Email Address</div>
                     <div>

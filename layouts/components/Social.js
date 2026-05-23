@@ -1,421 +1,94 @@
+"use client";
+
+import React from "react";
 import {
-  IoCall,
-  IoGlobeOutline,
-  IoLocation,
-  IoLogoBehance,
-  IoLogoBitbucket,
-  IoLogoCodepen,
-  IoLogoDiscord,
-  IoLogoDribbble,
   IoLogoFacebook,
-  IoLogoFoursquare,
-  IoLogoGithub,
-  IoLogoGitlab,
   IoLogoInstagram,
   IoLogoLinkedin,
-  IoLogoMedium,
-  IoLogoPinterest,
-  IoLogoReddit,
-  IoLogoRss,
-  IoLogoSkype,
-  IoLogoSlack,
-  IoLogoSnapchat,
-  IoLogoSoundcloud,
-  IoLogoTiktok,
-  IoLogoTumblr,
-  IoLogoTwitter,
-  IoLogoVimeo,
-  IoLogoVk,
-  IoLogoWhatsapp,
   IoLogoYoutube,
-  IoMail,
 } from "react-icons/io5";
 
 const Social = ({ source, className }) => {
-  const {
-    facebook,
-    twitter,
-    instagram,
-    youtube,
-    linkedin,
-    github,
-    gitlab,
-    discord,
-    slack,
-    medium,
-    codepen,
-    bitbucket,
-    dribbble,
-    behance,
-    pinterest,
-    soundcloud,
-    tumblr,
-    reddit,
-    vk,
-    whatsapp,
-    snapchat,
-    vimeo,
-    tiktok,
-    foursquare,
-    rss,
-    email,
-    phone,
-    address,
-    skype,
-    website,
-  } = source;
+  // Pro-level data extraction: handles nested objects, params, or flat source structures
+  const socialData = source?.social || source?.params?.social || source || {};
+
+  // Highly robust helper to find social link URL dynamically across common naming conventions
+  const findLink = (key) => {
+    if (!socialData) return "";
+
+    // Handle array structure: [{ name: 'facebook', url: '...' }]
+    if (Array.isArray(socialData)) {
+      const entry = socialData.find(
+        (s) =>
+          s.name?.toLowerCase() === key.toLowerCase() ||
+          s.label?.toLowerCase() === key.toLowerCase()
+      );
+      return entry?.url || "";
+    }
+
+    // Handle object structure with multiple fallback patterns (e.g., linkedin, LinkedIn, linkedin_url)
+    const patterns = [
+      key.toLowerCase(),
+      key,
+      `${key.toLowerCase()}_url`,
+      `${key.toLowerCase()}_link`,
+      key === "LinkedIn" ? "Linkdin" : null,
+      key === "LinkedIn" ? "linkedIn" : null,
+    ].filter(Boolean);
+
+    for (const pattern of patterns) {
+      const val = socialData[pattern];
+      if (val && (typeof val === "string" || typeof val?.url === "string")) {
+        const finalUrl = typeof val === "string" ? val : val.url;
+        return finalUrl;
+      }
+    }
+
+    if (key === "LinkedIn") {
+      console.warn(
+        "Social.js: LinkedIn URL not found in config, using fallback."
+      );
+      return "https://www.linkedin.com/company/creative3bx";
+    }
+    return "";
+  };
+
+  const linkedin = findLink("LinkedIn");
+  const facebook = findLink("Facebook");
+  const instagram = findLink("Instagram");
+  const youtube = findLink("YouTube");
+
+  // Define strict order: LinkedIn -> Facebook -> Instagram -> YouTube
+  const socialLinks = [
+    { name: "LinkedIn", icon: <IoLogoLinkedin />, url: linkedin },
+    { name: "Facebook", icon: <IoLogoFacebook />, url: facebook },
+    { name: "Instagram", icon: <IoLogoInstagram />, url: instagram },
+    { name: "YouTube", icon: <IoLogoYoutube />, url: youtube },
+  ];
+
   return (
     <ul className={className}>
-      {facebook && (
-        <li className="inline-block">
-          <a
-            aria-label="facebook"
-            href={facebook}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoFacebook />
-          </a>
-        </li>
-      )}
-      {twitter && (
-        <li className="inline-block">
-          <a
-            aria-label="twitter"
-            href={twitter}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoTwitter />
-          </a>
-        </li>
-      )}
-      {instagram && (
-        <li className="inline-block">
-          <a
-            aria-label="instagram"
-            href={instagram}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoInstagram />
-          </a>
-        </li>
-      )}
-      {youtube && (
-        <li className="inline-block">
-          <a
-            aria-label="youtube"
-            href={youtube}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoYoutube />
-          </a>
-        </li>
-      )}
-      {linkedin && (
-        <li className="inline-block">
-          <a
-            aria-label="linkedin"
-            href={linkedin}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoLinkedin />
-          </a>
-        </li>
-      )}
-      {github && (
-        <li className="inline-block">
-          <a
-            aria-label="github"
-            href={github}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoGithub />
-          </a>
-        </li>
-      )}
-      {gitlab && (
-        <li className="inline-block">
-          <a
-            aria-label="gitlab"
-            href={gitlab}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoGitlab />
-          </a>
-        </li>
-      )}
-      {discord && (
-        <li className="inline-block">
-          <a
-            aria-label="discord"
-            href={discord}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoDiscord />
-          </a>
-        </li>
-      )}
-      {slack && (
-        <li className="inline-block">
-          <a
-            aria-label="slack"
-            href={slack}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoSlack />
-          </a>
-        </li>
-      )}
-      {medium && (
-        <li className="inline-block">
-          <a
-            aria-label="medium"
-            href={medium}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoMedium />
-          </a>
-        </li>
-      )}
-      {codepen && (
-        <li className="inline-block">
-          <a
-            aria-label="codepen"
-            href={codepen}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoCodepen />
-          </a>
-        </li>
-      )}
-      {bitbucket && (
-        <li className="inline-block">
-          <a
-            aria-label="bitbucket"
-            href={bitbucket}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoBitbucket />
-          </a>
-        </li>
-      )}
-      {dribbble && (
-        <li className="inline-block">
-          <a
-            aria-label="dribbble"
-            href={dribbble}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoDribbble />
-          </a>
-        </li>
-      )}
-      {behance && (
-        <li className="inline-block">
-          <a
-            aria-label="behance"
-            href={behance}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoBehance />
-          </a>
-        </li>
-      )}
-      {pinterest && (
-        <li className="inline-block">
-          <a
-            aria-label="pinterest"
-            href={pinterest}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoPinterest />
-          </a>
-        </li>
-      )}
-      {soundcloud && (
-        <li className="inline-block">
-          <a
-            aria-label="soundcloud"
-            href={soundcloud}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoSoundcloud />
-          </a>
-        </li>
-      )}
-      {tumblr && (
-        <li className="inline-block">
-          <a
-            aria-label="tumblr"
-            href={tumblr}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoTumblr />
-          </a>
-        </li>
-      )}
-      {reddit && (
-        <li className="inline-block">
-          <a
-            aria-label="reddit"
-            href={reddit}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoReddit />
-          </a>
-        </li>
-      )}
-      {vk && (
-        <li className="inline-block">
-          <a
-            aria-label="vk"
-            href={vk}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoVk />
-          </a>
-        </li>
-      )}
-      {whatsapp && (
-        <li className="inline-block">
-          <a
-            aria-label="whatsapp"
-            href={whatsapp}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoWhatsapp />
-          </a>
-        </li>
-      )}
-      {snapchat && (
-        <li className="inline-block">
-          <a
-            aria-label="snapchat"
-            href={snapchat}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoSnapchat />
-          </a>
-        </li>
-      )}
-      {vimeo && (
-        <li className="inline-block">
-          <a
-            aria-label="vimeo"
-            href={vimeo}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoVimeo />
-          </a>
-        </li>
-      )}
-      {tiktok && (
-        <li className="inline-block">
-          <a
-            aria-label="tiktok"
-            href={tiktok}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoTiktok />
-          </a>
-        </li>
-      )}
-      {foursquare && (
-        <li className="inline-block">
-          <a
-            aria-label="foursquare"
-            href={foursquare}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoFoursquare />
-          </a>
-        </li>
-      )}
-      {skype && (
-        <li className="inline-block">
-          <a
-            aria-label="skype"
-            href={skype}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoSkype />
-          </a>
-        </li>
-      )}
-      {website && (
-        <li className="inline-block">
-          <a
-            aria-label="website"
-            href={website}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoGlobeOutline />
-          </a>
-        </li>
-      )}
-      {rss && (
-        <li className="inline-block">
-          <a
-            aria-label="rss feed"
-            href={rss}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLogoRss />
-          </a>
-        </li>
-      )}
-      {email && (
-        <li className="inline-block">
-          <a aria-label="email" href={`mailto:${email}`}>
-            <IoMail />
-          </a>
-        </li>
-      )}
-      {phone && (
-        <li className="inline-block">
-          <a aria-label="telephone" href={`tel:${phone}`}>
-            <IoCall />
-          </a>
-        </li>
-      )}
-      {address && (
-        <li className="inline-block">
-          <a
-            aria-label="location"
-            href={address}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-            <IoLocation />
-          </a>
-        </li>
-      )}
+      {socialLinks.map((item) => {
+        // Skip rendering if the URL was not found or is empty
+        if (!item.url || typeof item.url !== "string" || item.url.trim() === "")
+          return null;
+
+        return (
+          <li key={item.name} className="inline-block">
+            <a
+              aria-label={item.name.toLowerCase()}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`Follow us on ${item.name}`}
+              className="inline-block px-1.5 text-[1.2rem] transition-all duration-200 hover:text-red-600"
+            >
+              {/* Force size attribute to ensure icon visibility */}
+              {React.cloneElement(item.icon, { size: 22 })}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   );
 };
