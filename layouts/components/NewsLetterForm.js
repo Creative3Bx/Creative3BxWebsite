@@ -1,18 +1,42 @@
 import React, { useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
+import { sendContactEmail } from "../../layouts/sendEmail";
 
 function CustomForm({ status, message, onValidated }) {
   const [email, setEmail] = useState("");
+  const [localStatus, setLocalStatus] = useState(null);
 
   const resetForm = () => {
     setEmail("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    email && email.indexOf("@") > -1 && onValidated({ EMAIL: email });
-    resetForm();
+
+    if (!email || email.indexOf("@") === -1) return;
+
+    setLocalStatus("sending");
+
+    try {
+      const result = await sendContactEmail({
+        from_email: email,
+        source: "newsletter",
+      });
+
+      if (result.success) {
+        setLocalStatus("success");
+        resetForm();
+        // Maintain compatibility with parent wrappers (like Mailchimp)
+        if (onValidated) onValidated({ EMAIL: email });
+      } else {
+        setLocalStatus("error");
+      }
+    } catch (err) {
+      setLocalStatus("error");
+    }
   };
+
+  const displayStatus = localStatus || status;
 
   return (
     <>
@@ -22,6 +46,7 @@ function CustomForm({ status, message, onValidated }) {
             // style={{ zIndex: "-1", position: "relative" }}
             className="newsletter-input form-input h-12 w-full rounded-3xl border-none bg-theme-light px-5 py-3 pr-12 text-dark placeholder:text-xs dark:bg-darkmode-theme-dark "
             type="text"
+            value={email}
             placeholder="Enter Your Email"
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -38,16 +63,17 @@ function CustomForm({ status, message, onValidated }) {
           Sign In
         </button>
       </form>
-      {status === "sending" && (
+      {displayStatus === "sending" && (
         <div className="mt-4 text-red-700">sending...</div>
       )}
-      {status === "error" && (
-        <div
-          className="mt-4 text-red-700"
-          dangerouslySetInnerHTML={{ __html: message }}
-        />
+      {displayStatus === "error" && (
+        <div className="mt-4 text-red-700">
+          {typeof message === "string"
+            ? message
+            : message?.message || "Error subscribing. Please try again."}
+        </div>
       )}
-      {status === "success" && (
+      {displayStatus === "success" && (
         <div className="mt-4 text-red-600">Subscribed !</div>
       )}
     </>

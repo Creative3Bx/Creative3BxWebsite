@@ -6,53 +6,32 @@ import stylesStartBtn from "../../../styles/genralstyles.module.css";
 
 import { LoadingOutlined } from "@ant-design/icons";
 import Avatar from "../Avatar";
-import axios from "axios";
-import emailjs from "@emailjs/browser"; // npm install @emailjs/browser
+import { sendContactEmail } from "../../../layouts/sendEmail";
 
 const EmailForm = (props) => {
   const [email, setEmail] = useState("");
   const [firstName, setfirstName] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
   const form = useRef();
 
-  const sendEmail = (e) => {
-    // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
-    emailjs.sendForm(
-      process.env.NEXT_PUBLIC_CE_Emailjs_SERVICE_ID,
-      process.env.NEXT_PUBLIC_CE_Emailjs_TEMPLATE_ID,
-      form.current,
-      process.env.NEXT_PUBLIC_CE_Emailjs_PUBLIC_KEY
-    );
-  };
-  function getOrCreateUser(callback) {
-    axios
-      .put(
-        "https://api.chatengine.io/users/",
-        { username: email, email: email, secret: email, first_name: firstName },
-        { headers: { "Private-Key": process.env.NEXT_PUBLIC_CE_PRIVATE_KEY } }
-      )
-      .then((r) => callback(r.data))
-      .catch((e) => console.log("Get or create user error", e));
-  }
+  const sendSupportNotification = async (statusSource) => {
+    const payload = {
+      from_name: firstName,
+      from_email: email,
+      from_phone: phone,
+      message:
+        statusSource === "live_chat_failure"
+          ? "Initial Support Contact - Chatwoot Identification Failed."
+          : "User started a live chat session via Support Window.",
+      source: statusSource,
+    };
 
-  function getOrCreateChat(callback) {
-    //  const message='Welcome to chat support , how can we help you today?'
-    axios
-      .put(
-        "https://api.chatengine.io/chats/",
-        { usernames: [email, "Rami Tech Support"], is_direct_chat: true },
-        {
-          headers: {
-            "Project-ID": process.env.NEXT_PUBLIC_CE_PROJECT_ID,
-            "User-Name": email,
-            "User-Secret": email,
-          },
-        }
-      )
-      .then((r) => callback(r.data))
-      .catch((e) => console.log("Get or create chat error", e));
-  }
+    // Silent backup call
+    await sendContactEmail(payload);
+  };
+
   function validateEmail(email) {
     const providerPattern =
       /@(gmail|yahoo|hotmail|aol|icloud|zoho|protonmail|mail|gmx|yandex)\./;
@@ -61,27 +40,39 @@ const EmailForm = (props) => {
     return providerPattern.test(email) && tldPattern.test(email);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     if (event) event.preventDefault();
 
     if (!validateEmail(email)) {
       setEmailError("Please enter a valid email address.");
       return;
-    } else {
-      setLoading(true);
-      //sendEmail();
     }
 
+    setLoading(true);
     setEmailError("");
 
-    //Now we need to call API function calls whenw e get a new email entered in chat box
-    getOrCreateUser((user) => {
-      props.setUser && props.setUser(user);
-      getOrCreateChat((chat) => {
-        setLoading(false);
-        props.setChat && props.setChat(chat);
-      });
-    });
+    try {
+      if (window.$chatwoot) {
+        // 1. Identify user in Chatwoot
+        window.$chatwoot.setUser(email, {
+          email: email,
+          name: firstName,
+          phone_number: phone,
+        });
+        // 2. Open Chatwoot Widget
+        window.$chatwoot.toggle("open");
+        // 3. Send Success Notification Email
+        await sendSupportNotification("live_chat_success");
+        // 4. Signal parent to close our custom EmailForm window
+        if (props.onComplete) props.onComplete();
+      }
+    } catch (e) {
+      console.error("Chatwoot Integration Error:", e);
+      setEmailError("Could not connect to chat. Please try again later.");
+      await sendSupportNotification("live_chat_failure"); // Send backup notification email only on error
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -128,6 +119,8 @@ const EmailForm = (props) => {
         }}
       >
         <Avatar
+          isWindowVisible={props.visible}
+          avatar={props.avatar}
           style={{
             position: "relative",
             left: "calc(50% - 44px)",
@@ -142,49 +135,55 @@ const EmailForm = (props) => {
         <form
           ref={form}
           onSubmit={(e) => handleSubmit(e)}
-          style={{ position: "relative", width: "100%", top: "19.75%" }}
+          style={{ position: "relative", width: "100%", top: "16%" }}
         >
           <input
             style={styles.emailInput}
             onChange={(e) => setfirstName(e.target.value.toLowerCase())}
             placeholder="Your Name"
             type="text"
+            name="from_name"
             required
           />
-          <br />
           <input
             style={styles.emailInput}
             onChange={(e) => setEmail(e.target.value.toLowerCase())}
             placeholder="Your Email"
             type="email"
+            name="from_email"
             required
           />
+          <input
+            style={styles.emailInput}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Phone Number (Optional)"
+            type="text"
+            name="from_phone"
+          />
 
-          <br />
           {emailError && <div style={styles.errorEmailForm}>{emailError}</div>}
 
           <div
             style={
               emailError
-                ? { ...styles.bottomText, marginTop: "-20px" }
+                ? { ...styles.bottomText, marginTop: "-15px" }
                 : styles.bottomText
             }
           >
-            Enter your Name and Email <br /> to get started
+            Enter details to get started
           </div>
 
           <button
             type="button"
             style={
               emailError
-                ? { ...styles.submitButton, marginTop: "-50px" }
+                ? { ...styles.submitButton, marginTop: "-40px" }
                 : styles.submitButton
             }
             className={stylesStartBtn.startButton}
             onClick={(e) => {
               if (form.current.reportValidity()) {
                 handleSubmit(e);
-                //sendEmail();
               }
             }}
           >

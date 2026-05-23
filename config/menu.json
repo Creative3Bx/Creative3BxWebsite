@@ -1,9 +1,19 @@
 {
   "main": [
     {
-      "name": "📞0431449645, creative3Bx@gmail.com",
-      "url": "/contact"
-      
+      "name": "📞 Contact Support",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "📞 Call: 0494743131",
+          "url": "tel:0494743131"
+        },
+        {
+          "name": "📧 Email: Admin@Creative3bx.com",
+          "url": "/contact"
+        }
+      ]
     },
     {
       "name": "Home",
@@ -11,7 +21,7 @@
       
     },
     {
-      "name": "Support",
+      "name": "Email us",
       "url": "/contact"
     },
     {

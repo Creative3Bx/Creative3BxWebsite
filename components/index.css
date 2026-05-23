@@ -90,3 +90,15 @@ display: none;
   max-height: 400px; /* Adjust the value as needed */
   overflow-y: auto;
 }
+
+@media (max-width: 767px) {
+  .ce-close-window-button {
+    width: 45px !important;
+    height: 45px !important;
+    top: 8px !important;
+    right: 8px !important;
+  }
+  .ce-close-window-button span {
+    font-size: 24px !important;
+  }
+}

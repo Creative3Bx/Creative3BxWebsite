@@ -3,12 +3,15 @@
  *
  * */
 import React, { useRef, useEffect, useState } from "react";
-import Avatar from "./Avatar";
+import Avatar, { getRandomFace } from "./Avatar";
 import SupportWindow from "./SupportWindow";
+
 const SupportEngine = () => {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   const [visibleNotification, setVisibleNotification] = useState(true);
+  const [agentImage, setAgentImage] = useState(getRandomFace());
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
@@ -26,14 +29,21 @@ const SupportEngine = () => {
     if (visible) {
       setVisible(false);
       setVisibleNotification(true);
+      // Pick a new face for the next session when closing
+      setAgentImage(getRandomFace());
     } else {
       setVisible(true);
       setVisibleNotification(false);
     }
   };
+
   return (
     <div ref={ref}>
-      <SupportWindow visible={visible} onClose={() => setVisible(false)} />
+      <SupportWindow
+        visible={visible}
+        onClose={handleShowSuportWindow}
+        avatar={agentImage}
+      />
       <Avatar
         onClick={handleShowSuportWindow}
         style={{
@@ -43,6 +53,7 @@ const SupportEngine = () => {
         }}
         visibleNotification={visibleNotification}
         isWindowVisible={visible}
+        avatar={agentImage}
       />
     </div>
   );

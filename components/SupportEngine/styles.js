@@ -102,7 +102,7 @@ export const styles = {
   topText: {
     position: "relative",
     width: "100%",
-    top: "15%",
+    top: "14%",
     color: "white",
     fontSize: "24px",
     fontWeight: "600",
@@ -120,9 +120,9 @@ export const styles = {
   bottomText: {
     position: "absolute",
     width: "100%",
-    top: "110%",
+    top: "112%",
     color: "#7f1d1d",
-    fontSize: "24px",
+    fontSize: "18px",
     fontWeight: "600",
   },
   submitButton: {
@@ -133,7 +133,7 @@ export const styles = {
     color: "black",
     cursor: "pointer",
     transition: "background-color 0.3s ease",
-    top: "200%",
+    top: "140%",
     left: "28%",
   },
 
