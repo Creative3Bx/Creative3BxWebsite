@@ -189,7 +189,7 @@ const Avatar = (props) => {
               border: "none",
             }}
           >
-            <span className="text-lg text-white">🗙</span>
+            <span className="text-lg text-white">×</span>
           </button>
           <div
             style={{

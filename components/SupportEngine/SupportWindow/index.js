@@ -37,7 +37,7 @@ const SupportWindow = (props) => {
           transition: "background 0.2s ease",
         }}
       >
-        <span className="text-lg text-white">🗙</span>
+        <span className="text-lg text-white">×</span>
       </button>
 
       <EmailForm
