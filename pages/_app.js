@@ -58,6 +58,23 @@ const App = ({ Component, pageProps }) => {
   });
   return (
     <>
+      {/* Google Tag Manager - Global site tag */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_TAG_ID}`}
+      />
+      <Script
+        id="gtag-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_TAG_ID}');
+          `,
+        }}
+      />
       <JsonContext>
         <Script id="chatwoot-settings" strategy="afterInteractive">
           {`
@@ -74,7 +91,7 @@ const App = ({ Component, pageProps }) => {
               s.parentNode.insertBefore(g,s);
               g.onload=function(){
                 window.chatwootSDK.run({
-                  websiteToken: 'cua7BbPuYPA1Nd7VTz1jUVaW',
+                  websiteToken: "${process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN}",
                   baseUrl: BASE_URL
                 })
               }
