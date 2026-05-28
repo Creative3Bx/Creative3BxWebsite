@@ -355,7 +355,7 @@ const Contact = ({ data }) => {
           {phone && (
             <div className="md:col-6 lg:col-4">
               <Link
-                href={`tel:${phone}`}
+                href={`tel:+61${phone.substring(1)}`}
                 className="my-4 flex h-[100px] items-center justify-center
              rounded border border-border p-4 text-red-600 dark:border-darkmode-border"
               >
