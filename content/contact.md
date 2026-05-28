@@ -9,8 +9,8 @@ form_action: "#"
 layout: "contact"
 addresses:
   - icon: FaUserAlt
-    content: 0494743131
-    link: tel:0494743131
+    content: +61494743131
+    link: tel:+61494743131
   - icon: FaEnvelope
     content: Admin@Creative3bx.com
     link: mailto:Admin@Creative3bx.com
