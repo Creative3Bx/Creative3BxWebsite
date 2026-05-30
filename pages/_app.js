@@ -99,6 +99,26 @@ const App = ({ Component, pageProps }) => {
           `}
         </Script>
         {loading && <Loader />}
+        <Head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ProfessionalService",
+                name: "Creative3Bx IT Services",
+                url: "https://creative3bx.com",
+                logo: "https://creative3bx.com/images/Logo-Creative3BxDark.svg",
+                contactPoint: {
+                  "@type": "ContactPoint",
+                  telephone: "+61 494 743 131",
+                  contactType: "customer service",
+                  email: "Admin@Creative3bx.com",
+                },
+              }),
+            }}
+          />
+        </Head>
         <ContextProvider>
           <Head>
             {/* google font css */}

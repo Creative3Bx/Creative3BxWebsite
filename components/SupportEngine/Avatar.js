@@ -76,7 +76,7 @@ const Avatar = (props) => {
       >
         {/* WhatsApp */}
         <a
-          href="https://wa.me/61494743131"
+          href="https://wa.me/+61494743131"
           target="_blank"
           rel="noopener noreferrer"
           style={{

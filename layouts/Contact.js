@@ -81,8 +81,6 @@ const Contact = ({ data }) => {
     const formData = new FormData(form.current);
     const payload = Object.fromEntries(formData.entries());
 
-    console.log("[Debug] Contact Form Submission initiated:", payload);
-
     try {
       const result = await sendContactEmail(payload);
 
