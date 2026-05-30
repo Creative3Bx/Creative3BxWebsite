@@ -7,10 +7,6 @@ import theme from "@config/theme.json";
 import { useEffect, useState } from "react";
 import TagManager from "react-gtm-module";
 import "styles/style.scss";
-import "../components/index.css";
-import "../styles/auth.css";
-import "../styles/chats.css";
-import "../styles/auth.css";
 import { JsonContext } from "context/state";
 
 //import chatEngine components
@@ -78,25 +74,25 @@ const App = ({ Component, pageProps }) => {
       <JsonContext>
         <Script id="chatwoot-settings" strategy="afterInteractive">
           {`
-            window.chatwootSettings = {
-              hideMessageBubble: true,
-              position: 'right',
-              type: 'standard',
-            };
-            (function(d,t) {
-              var BASE_URL="https://app.chatwoot.com";
-              var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-              g.src=BASE_URL+"/packs/js/sdk.js";
-              g.async = true;
-              s.parentNode.insertBefore(g,s);
-              g.onload=function(){
-                window.chatwootSDK.run({
-                  websiteToken: "${process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN}",
-                  baseUrl: BASE_URL
-                })
-              }
-            })(document,"script");
-          `}
+          window.chatwootSettings = {
+            hideMessageBubble: true,
+            position: 'right',
+            type: 'standard',
+          };
+          (function(d,t) {
+            var BASE_URL="https://app.chatwoot.com";
+            var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=BASE_URL+"/packs/js/sdk.js";
+            g.async = true;
+            s.parentNode.insertBefore(g,s);
+            g.onload=function(){
+              window.chatwootSDK.run({
+                websiteToken: "${process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN}",
+                baseUrl: BASE_URL
+              })
+            }
+          })(document,"script");
+        `}
         </Script>
         {loading && <Loader />}
         <Head>
