@@ -1,5 +1,6 @@
 import Base from "@layouts/Baseof";
-import { slugify } from "@lib/utils/textConverter";
+import { getSinglePage } from "@lib/contentParser";
+import { markdownify, slugify } from "@lib/utils/textConverter";
 import Post from "@partials/Post";
 import { useSearchContext } from "context/state";
 import { useRouter } from "next/router";
@@ -7,29 +8,40 @@ import { useRouter } from "next/router";
 const SearchPage = () => {
   const router = useRouter();
   const { query } = router;
-  const keyword = slugify(query.key);
+  const keyword = slugify(query.key || "");
   const { posts } = useSearchContext();
 
-  // Defensive check: Ensure posts is an array before filtering.
-  // This prevents a crash if the context fails to provide the posts.
-  const searchResults = Array.isArray(posts)
-    ? posts.filter((product) => {
-        if (product.frontmatter.draft) {
-          return !product.frontmatter.draft;
-        }
-        if (slugify(product.frontmatter.title).includes(keyword)) {
-          return product;
-        } else if (
-          product.frontmatter.categories.find((category) =>
-            slugify(category).includes(keyword.toLowerCase())
-          )
-        ) {
-          return product;
-        } else if (slugify(product.content).includes(keyword)) {
-          return product;
-        }
-      })
-    : [];
+  const searchResults = posts.filter((post) => {
+    // Always check for frontmatter existence
+    if (!post.frontmatter || post.frontmatter.draft) {
+      return false;
+    }
+
+    const { title, categories } = post.frontmatter;
+    const { content } = post;
+
+    // 1. Search in Title (if it exists)
+    if (title && slugify(title).includes(keyword)) {
+      return true;
+    }
+
+    // 2. Search in Categories (if they exist)
+    if (
+      categories &&
+      categories.find(
+        (category) => category && slugify(category).includes(keyword)
+      )
+    ) {
+      return true;
+    }
+
+    // 3. Search in Content (if it exists)
+    if (content && slugify(content).includes(keyword)) {
+      return true;
+    }
+
+    return false;
+  });
 
   return (
     <Base title={`Search results for ${query.key}`}>
