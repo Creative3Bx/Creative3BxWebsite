@@ -10,51 +10,53 @@ const SearchPage = () => {
   const { query } = router;
   const keyword = slugify(query.key || "");
   const { posts } = useSearchContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    // When the search results are calculated and the component updates,
-    // the loading should be considered complete.
-    setIsLoading(false);
-
-    // If the user navigates away, ensure loading is reset.
+    // Show spinner on route change
     const handleRouteChange = () => setIsLoading(true);
     router.events.on("routeChangeStart", handleRouteChange);
 
     return () => router.events.off("routeChangeStart", handleRouteChange);
-  }, [keyword, posts, router.events]);
+  }, [router.events]);
 
-  const searchResults = posts.filter((post) => {
-    // Always check for frontmatter existence
-    if (!post.frontmatter || post.frontmatter.draft) {
+  useEffect(() => {
+    // Hide spinner after search results are calculated
+    const results = posts.filter((post) => {
+      // Always check for frontmatter existence
+      if (!post.frontmatter || post.frontmatter.draft) {
+        return false;
+      }
+
+      const { title, categories } = post.frontmatter;
+      const { content } = post;
+
+      // 1. Search in Title (if it exists)
+      if (title && slugify(title).includes(keyword)) {
+        return true;
+      }
+
+      // 2. Search in Categories (if they exist)
+      if (
+        categories &&
+        categories.find(
+          (category) => category && slugify(category).includes(keyword)
+        )
+      ) {
+        return true;
+      }
+
+      // 3. Search in Content (if it exists)
+      if (content && slugify(content).includes(keyword)) {
+        return true;
+      }
+
       return false;
-    }
-
-    const { title, categories } = post.frontmatter;
-    const { content } = post;
-
-    // 1. Search in Title (if it exists)
-    if (title && slugify(title).includes(keyword)) {
-      return true;
-    }
-
-    // 2. Search in Categories (if they exist)
-    if (
-      categories &&
-      categories.find(
-        (category) => category && slugify(category).includes(keyword)
-      )
-    ) {
-      return true;
-    }
-
-    // 3. Search in Content (if it exists)
-    if (content && slugify(content).includes(keyword)) {
-      return true;
-    }
-
-    return false;
-  });
+    });
+    setSearchResults(results);
+    setIsLoading(false);
+  }, [keyword, posts]);
 
   return (
     <Base title={`Search results for ${query.key}`} isLoading={isLoading}>
