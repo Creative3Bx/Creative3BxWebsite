@@ -1,15 +1,28 @@
 import Base from "@layouts/Baseof";
-import { getSinglePage } from "@lib/contentParser";
 import { markdownify, slugify } from "@lib/utils/textConverter";
 import Post from "@partials/Post";
 import { useSearchContext } from "context/state";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const SearchPage = () => {
   const router = useRouter();
   const { query } = router;
   const keyword = slugify(query.key || "");
   const { posts } = useSearchContext();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // When the search results are calculated and the component updates,
+    // the loading should be considered complete.
+    setIsLoading(false);
+
+    // If the user navigates away, ensure loading is reset.
+    const handleRouteChange = () => setIsLoading(true);
+    router.events.on("routeChangeStart", handleRouteChange);
+
+    return () => router.events.off("routeChangeStart", handleRouteChange);
+  }, [keyword, posts, router.events]);
 
   const searchResults = posts.filter((post) => {
     // Always check for frontmatter existence
@@ -44,7 +57,7 @@ const SearchPage = () => {
   });
 
   return (
-    <Base title={`Search results for ${query.key}`}>
+    <Base title={`Search results for ${query.key}`} isLoading={isLoading}>
       <div className="section">
         <div className="container">
           <h1 className="h2 mb-8 text-center">

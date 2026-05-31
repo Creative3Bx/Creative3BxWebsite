@@ -1,6 +1,7 @@
 import config from "@config/config.json";
 import { plainify } from "@lib/utils/textConverter";
 import Footer from "@partials/Footer";
+import Loader from "@layouts/components/Loader";
 import Header from "@partials/Header";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -12,6 +13,7 @@ const Base = ({
   image,
   noindex,
   canonical,
+  isLoading,
   children,
 }) => {
   const { meta_image, meta_author, meta_description } = config.metadata;
@@ -91,7 +93,7 @@ const Base = ({
       </Head>
       <Header />
       {/* main site */}
-      <main>{children}</main>
+      <main>{isLoading ? <Loader /> : children}</main>
       <Footer />
     </>
   );
