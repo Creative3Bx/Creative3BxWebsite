@@ -345,8 +345,6 @@ const Contact = ({ data }) => {
                 value="Send Your Email ➤"
               />
             </form>
-            {/*
-             */}
           </div>
         </div>
         <div className="row">

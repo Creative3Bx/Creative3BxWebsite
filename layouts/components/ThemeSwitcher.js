@@ -14,24 +14,6 @@ const ThemeSwitcher = () => {
 
   return (
     <>
-      {/* <label className={styles.switch}>
-      <input  type="checkbox" checked={isChecked} // Set checked attribute to state
-      onClick={() =>
-        setTheme(
-          theme === "dark" || resolvedTheme === "dark" ? "light" : "dark"
-        )
-      }
-      onChange={toggleChecked} // Toggle state when checkbox is clicked
-      />
-      <div className={styles.button}>
-        <div className={styles.light}></div>
-        <div className={styles.dots}></div>
-        <div className={styles.characters}></div>
-        <div className={styles.shine}></div>
-        <div className={styles.shadow}></div>
-      </div>
-    </label>  */}
-
       <label>
         <input
           type="checkbox"

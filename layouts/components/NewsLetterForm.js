@@ -5,6 +5,7 @@ import { sendContactEmail } from "../../layouts/sendEmail";
 function CustomForm({ status, message, onValidated }) {
   const [email, setEmail] = useState("");
   const [localStatus, setLocalStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const resetForm = () => {
     setEmail("");
@@ -16,6 +17,7 @@ function CustomForm({ status, message, onValidated }) {
     if (!email || email.indexOf("@") === -1) return;
 
     setLocalStatus("sending");
+    setErrorMessage("");
 
     try {
       const result = await sendContactEmail({
@@ -29,9 +31,11 @@ function CustomForm({ status, message, onValidated }) {
         // Maintain compatibility with parent wrappers (like Mailchimp)
         if (onValidated) onValidated({ EMAIL: email });
       } else {
+        setErrorMessage(result.error || "An unknown error occurred.");
         setLocalStatus("error");
       }
     } catch (err) {
+      setErrorMessage("Could not connect to the server. Please try again.");
       setLocalStatus("error");
     }
   };
@@ -43,7 +47,6 @@ function CustomForm({ status, message, onValidated }) {
       <form action="#" className="py-6" onSubmit={handleSubmit}>
         <fieldset className="relative">
           <input
-            // style={{ zIndex: "-1", position: "relative" }}
             className="newsletter-input form-input h-12 w-full rounded-3xl border-none bg-theme-light px-5 py-3 pr-12 text-dark placeholder:text-xs dark:bg-darkmode-theme-dark "
             type="text"
             value={email}
@@ -55,11 +58,7 @@ function CustomForm({ status, message, onValidated }) {
             style={{ zIndex: "-1" }}
           />
         </fieldset>
-        <button
-          // style={{ zIndex: "-1" }}
-          className="d-block  btn btn-primary mt-4 w-full"
-          type="submit"
-        >
+        <button className="d-block  btn btn-primary mt-4 w-full" type="submit">
           Sign In
         </button>
       </form>
@@ -68,9 +67,7 @@ function CustomForm({ status, message, onValidated }) {
       )}
       {displayStatus === "error" && (
         <div className="mt-4 text-red-700">
-          {typeof message === "string"
-            ? message
-            : message?.message || "Error subscribing. Please try again."}
+          {errorMessage || "Error subscribing. Please try again."}
         </div>
       )}
       {displayStatus === "success" && (

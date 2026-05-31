@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { styles } from "./styles";
 import ChatNotificationIcon from "./SupportWindow/ChatNotificationIcon";
 import Image from "next/image";
@@ -24,11 +24,15 @@ const Avatar = (props) => {
   const [showNotification, setShowNotification] = useState(false);
   const [showSocialMenu, setShowSocialMenu] = useState(false);
   const [closeButtonHovered, setCloseButtonHovered] = useState(false);
-
-  // Initialize with a random face as fallback
-  const [randomImage, setRandomImage] = useState(getRandomFace());
+  const [randomImage, setRandomImage] = useState(null);
 
   useEffect(() => {
+    // Set a random image only on the client-side after the initial render
+    // to prevent hydration mismatch errors.
+    if (!randomImage) {
+      setRandomImage(getRandomFace());
+    }
+
     const timer = setTimeout(() => {
       // Only trigger notification if the user hasn't opened the menu or window yet
       setShowNotification((current) => {
@@ -36,8 +40,8 @@ const Avatar = (props) => {
       });
     }, 30000);
 
-    return () => clearTimeout(timer); // This will clear the timeout if the component unmounts
-  }, [showSocialMenu, props.isWindowVisible]);
+    return () => clearTimeout(timer);
+  }, [showSocialMenu, props.isWindowVisible, randomImage]);
 
   const handleClick = () => {
     // Only allow interaction if an onClick handler is passed (prevents the header image in EmailForm from being clickable)
@@ -242,15 +246,15 @@ const Avatar = (props) => {
       >
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <Image
-            style={styles.chatWithMeButtonImage}
+            style={{ ...styles.chatWithMeButtonImage, objectFit: "cover" }}
             src={
               showSocialMenu
                 ? "/images/closeButton1.png"
-                : props.avatar || randomImage
+                : props.avatar || randomImage || SELF_IMAGES[0]
             }
             alt="Avatar Image"
-            layout="fill"
-            objectFit="cover"
+            fill
+            sizes="84px"
           />
         </div>
       </div>
