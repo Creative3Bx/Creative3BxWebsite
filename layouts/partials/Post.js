@@ -1,6 +1,7 @@
 import config from "@config/config.json";
 import ImageFallback from "@layouts/components/ImageFallback";
 import dateFormat from "@lib/utils/dateFormat";
+import { slugify } from "@lib/utils/textConverter";
 import Link from "next/link";
 import { FaRegCalendar, FaUserAlt } from "react-icons/fa";
 
@@ -19,16 +20,13 @@ const Post = ({ post }) => {
             height={208}
           />
         )}
-        <ul className="absolute top-3 left-2 flex flex-wrap items-center">
+        <ul className="absolute left-2 top-3 flex flex-wrap items-center">
           {post.frontmatter.categories.map((tag, index) => (
             <li
               className="mx-2 inline-flex h-7 rounded-[35px] bg-red-900 px-3 text-white"
               key={"tag-" + index}
             >
-              <Link
-                className="capitalize"
-                href={`/categories/${tag.replace(" ", "-")}`}
-              >
+              <Link className="capitalize" href={`/categories/${slugify(tag)}`}>
                 {tag}
               </Link>
             </li>

@@ -29,7 +29,7 @@ const Logo = ({ src }) => {
           //   height: logo_height.replace("px", "") + "px",
           //   width: logo_width.replace("px", "") + "px",
           // }}
-          className={"m-auto lg:w-72 lg:h-20 md:w-72 md:h-16 w-44 h-14 "}
+          className={"m-auto h-auto w-44 md:w-72 lg:w-72"}
         />
       ) : logo_text ? (
         logo_text

@@ -44,10 +44,11 @@ const Social = ({ source, className }) => {
       }
     }
 
-    if (key === "LinkedIn") {
-      console.warn(
-        "Social.js: LinkedIn URL not found in config, using fallback."
-      );
+    if (key === "LinkedIn" && process.env.NODE_ENV === "development") {
+      // This warning is helpful during development but will be stripped from production builds.
+      // console.warn(
+      //   "Social.js: LinkedIn URL not found in config, using fallback."
+      // );
       return "https://www.linkedin.com/company/creative3bx";
     }
     return "";

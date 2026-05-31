@@ -10,22 +10,26 @@ const SearchPage = () => {
   const keyword = slugify(query.key);
   const { posts } = useSearchContext();
 
-  const searchResults = posts.filter((product) => {
-    if (product.frontmatter.draft) {
-      return !product.frontmatter.draft;
-    }
-    if (slugify(product.frontmatter.title).includes(keyword)) {
-      return product;
-    } else if (
-      product.frontmatter.categories.find((category) =>
-        slugify(category).includes(keyword)
-      )
-    ) {
-      return product;
-    } else if (slugify(product.content).includes(keyword)) {
-      return product;
-    }
-  });
+  // Defensive check: Ensure posts is an array before filtering.
+  // This prevents a crash if the context fails to provide the posts.
+  const searchResults = Array.isArray(posts)
+    ? posts.filter((product) => {
+        if (product.frontmatter.draft) {
+          return !product.frontmatter.draft;
+        }
+        if (slugify(product.frontmatter.title).includes(keyword)) {
+          return product;
+        } else if (
+          product.frontmatter.categories.find((category) =>
+            slugify(category).includes(keyword.toLowerCase())
+          )
+        ) {
+          return product;
+        } else if (slugify(product.content).includes(keyword)) {
+          return product;
+        }
+      })
+    : [];
 
   return (
     <Base title={`Search results for ${query.key}`}>

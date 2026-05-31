@@ -67,9 +67,11 @@ const EmailForm = (props) => {
         if (props.onComplete) props.onComplete();
       }
     } catch (e) {
-      console.error("Chatwoot Integration Error:", e);
-      setEmailError("Could not connect to chat. Please try again later.");
-      await sendSupportNotification("live_chat_failure"); // Send backup notification email only on error
+      setEmailError(
+        "Could not connect to live chat. Your message has been sent to our support team via email instead."
+      );
+      // Send a backup notification email only on error. This is our "log".
+      await sendSupportNotification("live_chat_failure");
     } finally {
       setLoading(false);
     }
@@ -203,8 +205,6 @@ const EmailForm = (props) => {
               </svg>
             </span>
           </button>
-
-          {/* <input tyle={styles.bottomText} type="button" value="X" /> */}
         </form>
       </div>
     </div>

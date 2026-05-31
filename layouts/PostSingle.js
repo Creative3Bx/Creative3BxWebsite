@@ -1,7 +1,7 @@
 import config from "@config/config.json";
 import Base from "@layouts/Baseof";
 import dateFormat from "@lib/utils/dateFormat";
-import { markdownify } from "@lib/utils/textConverter";
+import { markdownify, slugify } from "@lib/utils/textConverter";
 import { DiscussionEmbed } from "disqus-react";
 import { MDXRemote } from "next-mdx-remote";
 import { useTheme } from "next-themes";
@@ -45,7 +45,7 @@ const PostSingle = ({
                       className="rounded-lg"
                     />
                   )}
-                  <ul className="absolute top-3 left-2 flex flex-wrap items-center">
+                  <ul className="absolute left-2 top-3 flex flex-wrap items-center">
                     {categories.map((tag, index) => (
                       <li
                         className="mx-2 inline-flex h-7 rounded-[35px] bg-red-900 px-3 text-white"
@@ -53,7 +53,7 @@ const PostSingle = ({
                       >
                         <Link
                           className="capitalize"
-                          href={`/categories/${tag.replace(" ", "-")}`}
+                          href={`/categories/${slugify(tag)}`}
                         >
                           {tag}
                         </Link>
@@ -91,10 +91,7 @@ const PostSingle = ({
                 )}
               </div>
             </div>
-            <Sidebar
-              posts={posts.filter((post) => post.slug !== slug)}
-              categories={allCategories}
-            />
+            <Sidebar posts={posts} categories={allCategories} />
           </div>
         </div>
 

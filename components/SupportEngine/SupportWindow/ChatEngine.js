@@ -82,12 +82,9 @@ const ChatEngine = (props) => {
   }
   useEffect(() => {
     const handleChaningSendBtnBGColor = () => {
-      console.log("handleChaningSendBtnBGColor >>> +_+_+_+_");
       const buttonElement = document.getElementById("ce-send-message-button");
       const spanBtn = document.getElementsByClassName("anticon-arrow-up")[0];
       const pElement = document.querySelector(".ql-editor p");
-
-      console.log("buttonElement >>", buttonElement);
       if (buttonElement && pElement) {
         // If there is no text inside the pElement, change the button color back to white
         if (pElement.textContent.trim() === "") {
@@ -103,23 +100,17 @@ const ChatEngine = (props) => {
           );
           spanBtn.style.fontWeight = "bold";
         }
-      } else {
-        console.log("buttonElement does not exist.");
       }
     };
 
     const handleSpaceBarPress = (event) => {
       if (event.key === " ") {
-        console.log("Space bar pressed +_+_+_+_");
         const pElement = document.querySelector(".ql-editor p");
 
         if (pElement) {
           const savedSel = saveSelection(pElement);
           pElement.textContent += " ";
           restoreSelection(pElement, savedSel);
-          console.log("pElement content after:", pElement.textContent);
-        } else {
-          console.log("pElement not found");
         }
       }
     };
@@ -138,20 +129,6 @@ const ChatEngine = (props) => {
       window.removeEventListener("keydown", handleChaningSendBtnBGColor);
     };
   }, [props.visible, showChat]);
-  /**   */
-  // useEffect(() => {
-  //   const handlePressItalicButton = () => {
-  //   const button = document.querySelector('.ql-italic');
-  //     console.log('inside use Effect >> ', button )
-  //     if (button) {
-  //       button.click();
-  //     }
-
-  //   }
-  //   window.addEventListener('keydown', handlePressItalicButton);
-  //   return () => {
-  //        window.removeEventListener('keydown', handlePressItalicButton);}
-  // }, []);
   useEffect(() => {
     if (props.visible) {
       setTimeout(() => {
