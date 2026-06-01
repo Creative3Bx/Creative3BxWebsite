@@ -49,7 +49,7 @@ const Social = ({ source, className }) => {
       // console.warn(
       //   "Social.js: LinkedIn URL not found in config, using fallback."
       // );
-      return "https://www.linkedin.com/company/creative3bx";
+      return "https://www.linkedin.com/company/124853965/";
     }
     return "";
   };

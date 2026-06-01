@@ -101,7 +101,7 @@ const Avatar = (props) => {
 
         {/* LinkedIn */}
         <a
-          href="https://www.linkedin.com/company/creative3bx"
+          href="https://www.linkedin.com/company/124853965/"
           target="_blank"
           rel="noopener noreferrer"
           style={{
