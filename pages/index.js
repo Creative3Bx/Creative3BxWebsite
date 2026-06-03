@@ -11,6 +11,8 @@ import { sortByDate } from "@lib/utils/sortFunctions";
 import { markdownify, slugify } from "@lib/utils/textConverter";
 import Link from "next/link";
 import { FaRegCalendar } from "react-icons/fa";
+import React from "react";
+import { useSpring, animated, useTrail } from "@react-spring/web";
 import styles from "../styles/genralstyles.module.css";
 import Head from "next/head";
 
@@ -31,6 +33,58 @@ const Home = ({
   );
   const showPosts = pagination;
 
+  // Reusable hook for scroll-triggered animations
+  const useScrollAnimation = (
+    threshold = 0.1,
+    config = { tension: 170, friction: 26 }
+  ) => {
+    const [ref, setRef] = React.useState(null);
+    const [inView, setInView] = React.useState(false);
+
+    const animation = useSpring({
+      opacity: inView ? 1 : 0,
+      transform: inView ? "translateY(0px)" : "translateY(40px)",
+      config,
+    });
+
+    React.useEffect(() => {
+      if (!ref) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            observer.unobserve(entry.target); // Animate only once
+          }
+        },
+        { threshold }
+      );
+
+      observer.observe(ref);
+      return () => observer.disconnect();
+    }, [ref, threshold]);
+
+    return [setRef, animation];
+  };
+
+  // Animation for the banner text
+  const bannerTextAnimation = useSpring({
+    from: { opacity: 0, transform: "translateY(40px)" },
+    to: { opacity: 1, transform: "translateY(0px)" },
+    delay: 200,
+  });
+
+  // Animation for the banner image
+  const bannerImageAnimation = useSpring({
+    from: { opacity: 0, transform: "scale(0.9)" },
+    to: { opacity: 1, transform: "scale(1)" },
+    delay: 400,
+  });
+
+  // Scroll animations for page sections
+  const [featuredRef, featuredAnimation] = useScrollAnimation();
+  const [promotionRef, promotionAnimation] = useScrollAnimation();
+  const [recentRef, recentAnimation] = useScrollAnimation();
+
   return (
     <>
       <Head>
@@ -50,42 +104,49 @@ const Home = ({
 
           <div className="container">
             <div className="row flex-wrap-reverse items-center justify-center lg:flex-row">
-              <div className="mt-12 text-center lg:col-6 lg:mt-0 lg:text-left">
-                <div className="banner-title">
-                  {markdownify(banner.title, "h1")}
-                  {markdownify(banner.title_small, "span")}
+              <animated.div
+                style={bannerTextAnimation}
+                className="mt-12 text-center lg:col-6 lg:mt-0 lg:text-left"
+              >
+                <div>
+                  <div className="banner-title">
+                    {markdownify(banner.title, "h1")}
+                    {markdownify(banner.title_small, "span")}
+                  </div>
+                  {markdownify(banner.content, "p", "mt-4")}
+                  {/* Contact us button */}
+                  <Link
+                    className="ml-10"
+                    href={banner.contactButton.link}
+                    rel={banner.contactButton.rel}
+                  >
+                    <button className={styles.contactusBtn}>
+                      {banner.contactButton.label}
+                      <span className={styles.arrow}>
+                        <svg
+                          fill="rgb(183, 128, 255)"
+                          viewBox="0 0 320 512"
+                          height="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path>
+                        </svg>
+                      </span>
+                    </button>
+                  </Link>
                 </div>
-                {markdownify(banner.content, "p", "mt-4")}
-                {/* Contact us button */}
-                <Link
-                  className="ml-10"
-                  href={banner.contactButton.link}
-                  rel={banner.contactButton.rel}
-                >
-                  <button className={styles.contactusBtn}>
-                    {banner.contactButton.label}
-                    <span className={styles.arrow}>
-                      <svg
-                        fill="rgb(183, 128, 255)"
-                        viewBox="0 0 320 512"
-                        height="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path>
-                      </svg>
-                    </span>
-                  </button>
-                </Link>
-              </div>
+              </animated.div>
               <div className="col-9 lg:col-6">
-                <ImageFallback
-                  className="mx-auto rounded-3xl object-contain"
-                  src={banner.image}
-                  width={548}
-                  height={443}
-                  priority={true}
-                  alt="Banner Image"
-                />
+                <animated.div style={bannerImageAnimation}>
+                  <ImageFallback
+                    className="mx-auto rounded-3xl object-contain"
+                    src={banner.image}
+                    width={548}
+                    height={443}
+                    priority={true}
+                    alt="Banner Image"
+                  />
+                </animated.div>
               </div>
             </div>
           </div>
@@ -98,7 +159,11 @@ const Home = ({
               <div className="mb-12 lg:col-8 lg:mb-0">
                 {/* Featured posts */}
                 {featured_posts.enable && (
-                  <div className="section">
+                  <animated.div
+                    style={featuredAnimation}
+                    ref={featuredRef}
+                    className="section"
+                  >
                     {markdownify(featured_posts.title, "h2", "section-title")}
                     {markdownify(
                       featured_posts.subtitle,
@@ -149,12 +214,16 @@ const Home = ({
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </animated.div>
                 )}
 
                 {/* Promotion */}
                 {promotion.enable && (
-                  <Link href={promotion.link} className="section block pt-0">
+                  <animated.div
+                    style={promotionAnimation}
+                    ref={promotionRef}
+                    className="section block pt-0"
+                  >
                     <ImageFallback
                       className="h-full w-full rounded-lg"
                       height="300"
@@ -162,12 +231,16 @@ const Home = ({
                       src={promotion.image}
                       alt="promotion"
                     />
-                  </Link>
+                  </animated.div>
                 )}
 
                 {/* Recent Posts */}
                 {recent_posts.enable && (
-                  <div className="section pt-0">
+                  <animated.div
+                    style={recentAnimation}
+                    ref={recentRef}
+                    className="section pt-0"
+                  >
                     {markdownify(recent_posts.title, "h2", "section-title")}
                     <div className="rounded border border-border px-6 pt-6 dark:border-darkmode-border">
                       <div className="row">
@@ -178,7 +251,7 @@ const Home = ({
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </animated.div>
                 )}
                 {/* Our Services button */}
                 <Link

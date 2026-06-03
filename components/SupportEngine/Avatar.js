@@ -7,6 +7,7 @@ import {
   FaWhatsapp,
   FaFacebookMessenger,
   FaComments,
+  FaTimes,
 } from "react-icons/fa";
 
 const SELF_IMAGES = [
@@ -24,15 +25,8 @@ const Avatar = (props) => {
   const [showNotification, setShowNotification] = useState(false);
   const [showSocialMenu, setShowSocialMenu] = useState(false);
   const [closeButtonHovered, setCloseButtonHovered] = useState(false);
-  const [randomImage, setRandomImage] = useState(null);
 
   useEffect(() => {
-    // Set a random image only on the client-side after the initial render
-    // to prevent hydration mismatch errors.
-    if (!randomImage) {
-      setRandomImage(getRandomFace());
-    }
-
     const timer = setTimeout(() => {
       // Only trigger notification if the user hasn't opened the menu or window yet
       setShowNotification((current) => {
@@ -41,7 +35,7 @@ const Avatar = (props) => {
     }, 30000);
 
     return () => clearTimeout(timer);
-  }, [showSocialMenu, props.isWindowVisible, randomImage]);
+  }, [showSocialMenu, props.isWindowVisible]);
 
   const handleClick = () => {
     // Only allow interaction if an onClick handler is passed (prevents the header image in EmailForm from being clickable)
@@ -193,7 +187,7 @@ const Avatar = (props) => {
               border: "none",
             }}
           >
-            <span className="text-lg text-white">🗙</span>
+            <FaTimes size={20} color="white" />
           </button>
           <div
             style={{
@@ -249,8 +243,8 @@ const Avatar = (props) => {
             style={{ ...styles.chatWithMeButtonImage, objectFit: "cover" }}
             src={
               showSocialMenu
-                ? "/images/closeButton1.png"
-                : props.avatar || randomImage || SELF_IMAGES[0]
+                ? "/images/closeButton1.png" // Use a consistent close button image
+                : props.avatar || SELF_IMAGES[0] // Use a consistent default avatar
             }
             alt="Avatar Image"
             fill

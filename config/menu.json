@@ -11,7 +11,7 @@
         },
         {
           "name": "📧 Email: Admin@Creative3bx.com",
-          "url": "/contact"
+          "url": "mailto:Admin@Creative3bx.com"
         }
       ]
     },
@@ -22,7 +22,7 @@
     },
     {
       "name": "Email us",
-      "url": "/contact"
+      "url": "/contact#contact-form"
     },
     {
       "name": "Services",
