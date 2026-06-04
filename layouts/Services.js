@@ -50,6 +50,16 @@ const AnimatedAccordion = ({ children, delay, ...props }) => {
   );
 };
 
+// Animated Header Wrapper
+const AnimatedHeader = ({ children }) => {
+  const [ref, animation] = useScrollAnimation(0);
+  return (
+    <animated.h3 ref={ref} style={animation} className="mb-4">
+      {children}
+    </animated.h3>
+  );
+};
+
 const Services = ({ data }) => {
   const { frontmatter, mdxContent } = data;
   const { title } = frontmatter;
@@ -57,6 +67,7 @@ const Services = ({ data }) => {
   const components = {
     ...shortcodes,
     Accordion: AnimatedAccordion,
+    AnimatedHeader: AnimatedHeader,
   };
 
   return (

@@ -4,10 +4,20 @@ import { getTaxonomy } from "@lib/taxonomyParser";
 import { humanize, markdownify, slugify } from "@lib/utils/textConverter";
 import Link from "next/link";
 const { blog_folder } = config.settings;
+import React from "react";
+import { useTrail, animated } from "@react-spring/web";
 import { getSinglePage } from "@lib/contentParser";
 import { FaFolder } from "react-icons/fa";
 
 const Categories = ({ categories }) => {
+  // Staggered animation for the category boxes
+  const trail = useTrail(categories.length, {
+    from: { opacity: 0, transform: "translateY(20px)" },
+    to: { opacity: 1, transform: "translateY(0px)" },
+    config: { mass: 1, tension: 280, friction: 25 },
+    delay: 200,
+  });
+
   return (
     <Base title={"categories"}>
       <section className="section pt-0">
@@ -18,19 +28,20 @@ const Categories = ({ categories }) => {
         )}
         <div className="container pt-12 text-center">
           <ul className="row">
-            {categories.map((category, i) => (
-              <li
-                key={`category-${i}`}
+            {trail.map((style, index) => (
+              <animated.li
+                style={style}
+                key={`category-${index}`}
                 className="mt-4 block lg:col-4 xl:col-3"
               >
                 <Link
-                  href={`/categories/${category.name}`}
+                  href={`/categories/${slugify(categories[index].name)}`}
                   className="flex w-full items-center justify-center rounded-lg bg-theme-light px-4 py-4 font-bold text-dark transition hover:bg-red-900 hover:text-white  dark:bg-darkmode-theme-dark dark:text-darkmode-light dark:hover:bg-red-900 dark:hover:text-white"
                 >
                   <FaFolder className="mr-1.5" />
-                  {humanize(category.name)} ({category.posts})
+                  {humanize(categories[index].name)} ({categories[index].posts})
                 </Link>
-              </li>
+              </animated.li>
             ))}
           </ul>
         </div>
