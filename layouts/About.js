@@ -1,10 +1,52 @@
 import { markdownify } from "@lib/utils/textConverter";
 import shortcodes from "@shortcodes/all";
 import { MDXRemote } from "next-mdx-remote";
+import React from "react";
+import { animated, useSpring } from "@react-spring/web";
 
 const About = ({ data }) => {
   const { frontmatter, mdxContent } = data;
   const { title, video, education, experience } = frontmatter;
+
+  // Reusable hook for scroll-triggered animations
+  const useScrollAnimation = (
+    delay = 0,
+    threshold = 0.1,
+    config = { tension: 170, friction: 26 }
+  ) => {
+    const [ref, setRef] = React.useState(null);
+    const [inView, setInView] = React.useState(false);
+
+    const animation = useSpring({
+      opacity: inView ? 1 : 0,
+      transform: inView ? "translateY(0px)" : "translateY(40px)",
+      delay: inView ? delay : 0,
+      config,
+    });
+
+    React.useEffect(() => {
+      if (!ref) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            observer.unobserve(entry.target); // Animate only once
+          }
+        },
+        { threshold }
+      );
+
+      observer.observe(ref);
+      return () => observer.disconnect();
+    }, [ref, threshold]);
+
+    return [setRef, animation];
+  };
+
+  const [contentRef, contentAnimation] = useScrollAnimation(0);
+  const [videoRef, videoAnimation] = useScrollAnimation(100);
+  const [educationRef, educationAnimation] = useScrollAnimation(200);
+  const [experienceRef, experienceAnimation] = useScrollAnimation(300);
 
   return (
     <section className="section mt-16">
@@ -15,7 +57,7 @@ const About = ({ data }) => {
           <MDXRemote {...mdxContent} components={shortcodes} />
         </div>
         {video && (
-          <div className="mb-8">
+          <animated.div ref={videoRef} style={videoAnimation} className="mb-8">
             <video
               width="100%"
               className="rounded-lg"
@@ -27,11 +69,15 @@ const About = ({ data }) => {
               <source src={video} type="video/mp4" />
               {"Sorry, your browser doesn't support videos."}
             </video>
-          </div>
+          </animated.div>
         )}
         <div className="row mt-24 text-left lg:flex-nowrap">
-          <div className="lg:col-6">
-            <div className="rounded border border-border p-6 dark:border-darkmode-border ">
+          <animated.div
+            ref={educationRef}
+            style={educationAnimation}
+            className="lg:col-6"
+          >
+            <div className="rounded border border-border p-6 dark:border-darkmode-border">
               {markdownify(education.title, "h2", "section-title mb-12")}
               <div className="row">
                 {education.degrees.map((degree, index) => (
@@ -47,9 +93,13 @@ const About = ({ data }) => {
               <br />
               <br />
             </div>
-          </div>
-          <div className="experience mt-10 lg:col-6 lg:mt-0">
-            <div className="rounded border border-border p-6 dark:border-darkmode-border ">
+          </animated.div>
+          <animated.div
+            ref={experienceRef}
+            style={experienceAnimation}
+            className="experience mt-10 lg:col-6 lg:mt-0"
+          >
+            <div className="rounded border border-border p-6 dark:border-darkmode-border">
               {markdownify(experience.title, "h2", "section-title mb-12")}
               <ul className="row">
                 {experience?.list?.map((item, index) => (
@@ -62,7 +112,7 @@ const About = ({ data }) => {
                 ))}
               </ul>
             </div>
-          </div>
+          </animated.div>
         </div>
       </div>
     </section>

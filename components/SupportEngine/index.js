@@ -10,7 +10,11 @@ const SupportEngine = () => {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   const [visibleNotification, setVisibleNotification] = useState(true);
-  const [agentImage, setAgentImage] = useState(getRandomFace());
+  const [agentImage, setAgentImage] = useState(null); // Start with null
+
+  useEffect(() => {
+    setAgentImage(getRandomFace()); // Set random image only on the client
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {

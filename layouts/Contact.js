@@ -1,14 +1,16 @@
 import { markdownify } from "@lib/utils/textConverter";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { BsArrowRightShort } from "react-icons/bs";
-import { FaUserAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import ImageFallback from "./components/ImageFallback";
-import React, { useRef, useState, useMemo } from "react";
-import Swal from "sweetalert2";
+import { FaEnvelope, FaMapMarkerAlt, FaUserAlt } from "react-icons/fa";
 import ReCAPTCHA from "react-google-recaptcha";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import Swal from "sweetalert2";
+import ImageFallback from "./components/ImageFallback";
 import { sendContactEmail } from "./sendEmail";
 
 const Contact = ({ data }) => {
+  const router = useRouter();
   const [selected, setSelected] = useState(new Set(["Instagram"]));
   const [sendButtonHovered, setSendButtonHovered] = useState(false);
   const selectedValue = useMemo(
@@ -20,6 +22,28 @@ const Contact = ({ data }) => {
   const form = useRef();
   const recaptchaRef = useRef();
   const [captchaToken, setCaptchaToken] = useState(null);
+
+  useEffect(() => {
+    // We wait a fraction of a second to ensure the page has finished rendering
+    // before we try to scroll. This makes the animation more reliable.
+    const timer = setTimeout(() => {
+      if (router.asPath.includes("#contact-form")) {
+        const formElement = document.getElementById("contact-form");
+        const headerElement = document.querySelector("header"); // Get the header
+        const headerHeight = headerElement ? headerElement.offsetHeight : 0; // Get header height
+
+        if (formElement) {
+          const elementPosition =
+            formElement.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = elementPosition - headerHeight - 20; // 20px for extra padding
+
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+      }
+    }, 100); // 100ms delay
+
+    return () => clearTimeout(timer); // Cleanup the timer
+  }, [router.asPath]);
 
   //Show Alert of successfull/ or failed
   const AlertSuccess = () => {
@@ -120,7 +144,10 @@ const Contact = ({ data }) => {
             )}
             <p>{paragrph}</p>
           </div>
-          <div className="contact-form-wrapper rounded border border-border p-6 lg:col-6 dark:border-darkmode-border">
+          <div
+            id="contact-form"
+            className="contact-form-wrapper rounded border border-border p-6 lg:col-6 dark:border-darkmode-border"
+          >
             <h2>
               Send Us A
               <span className="text-red ml-1.5 inline-flex  items-center text-red-500">
