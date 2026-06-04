@@ -4,7 +4,7 @@ draft: false
 layout: "services"
 ---
 
-### Our services
+<AnimatedHeader>Our services</AnimatedHeader>
 
 <Accordion title="🧰 CRM Implementation and Maintenance" delay="0">
 
@@ -71,7 +71,7 @@ Our team of professionals can manage your Google profile to optimize your visibi
 
 ---
 
-### Why Creative3Bx?
+<AnimatedHeader>Why Creative3Bx?</AnimatedHeader>
 
 <Accordion title="Why should you need to do this?" delay="600">
 
