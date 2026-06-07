@@ -1,9 +1,9 @@
 {
   "site": {
     "title": "Creative3Bx",
-    "base_url": "/",
+    "base_url": "https://creative3bx.com.au",
     "MetaLogo": "/images/MetaLogo2.png",
-    "logo": "/images/Logo-Creative3BxWhite.svg",  
+    "logo": "/images/Logo-Creative3BxWhite.svg",
     "logo_white": "/images/Logo-Creative3BxDark.svg",
     "logo_width": "250",
     "logo_height": "70",
@@ -11,15 +11,15 @@
   },
   "settings": {
     "theme_switcher": true,
-    "default_theme": "system",
+    "default_theme": "dark",
     "pagination": 6,
     "summary_length": 200,
     "blog_folder": "posts"
   },
   "params": {
     "tag_manager_id": "",
-    "footer_content": "Unlock the potential of your online reputation with Creative3Bx.❤️",
-    "copyrightCompanyName": "Creative3Bx | All rights reserved | Designed with ❤️ by [Creative3Bx] | Contact us: Admin@Creative3bx.com"
+    "footer_content": "Empower your business with custom CRM, automation, and expert reputation management.",
+    "copyrightCompanyName": "Creative3Bx | All rights reserved | Designed with by [Creative3Bx] | Contact us: Admin@creative3bx.com.au"
   },
   "metadata": {
     "meta_author": "Creative3Bx team",
@@ -44,13 +44,13 @@
       "enable": true,
       "title": "Newsletter",
       "content": "Join thousands of Tiny Salt subscribers and get our best recipes delivered each week!",
-      "privacy_policy_page": "www.creative3Bx.com",
-      "malichipm_url": "www.creative3Bx.com"
+      "privacy_policy_page": "/privacy-policy",
+      "mailchimp_url": "https://example.com"
     }
   },
   "disqus": {
     "enable": true,
-    "shortname": "themefisher-template",
+    "shortname": "creative3bx",
     "settings": {}
   }
 }

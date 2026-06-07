@@ -283,10 +283,7 @@ const Home = ({
                 <br />
 
                 <video width="100%" className="rounded-lg" controls>
-                  <source
-                    src="https://drive.google.com/uc?export=view&id=1kj8J9MYSeExnqxSpaG8WIA3F8im5eHyF"
-                    type="video/mp4"
-                  />
+                  <source src={banner.video} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
 

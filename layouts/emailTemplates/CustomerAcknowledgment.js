@@ -38,7 +38,7 @@ export const getCustomerAcknowledgmentTemplate = (from_name) => {
           <body>
             <div class="container">
               <div class="header">
-                <img src="https://creative3bx.com/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="180" style="display: block; margin: 0 auto;">
+                <img src="https://creative3bx.com.au/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="180" style="display: block; margin: 0 auto;">
               </div>
               <div class="card">
                 <div class="content">
@@ -52,7 +52,7 @@ export const getCustomerAcknowledgmentTemplate = (from_name) => {
                     <p>While you wait, feel free to explore our documentation or latest case studies on our portal:</p>
                     
                     <div style="text-align: center; margin: 35px 0;">
-                      <a href="https://creative3bx.com" class="btn">Access Client Resources</a>
+                      <a href="https://creative3bx.com.au" class="btn">Access Client Resources</a>
                     </div>
 
                   <p>We pride ourselves on delivering exceptional customer service, and your satisfaction is our top priority. Rest assured, we will address your concern with utmost care and expertise.</p>
