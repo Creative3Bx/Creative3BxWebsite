@@ -20,8 +20,9 @@ const Contact = ({ data }) => {
   const { frontmatter } = data;
   const { title, paragrph, form_action, phone, mail, location } = frontmatter;
   const form = useRef();
+  // Sanitize the reCAPTCHA site key to remove any extra characters or comments.
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_CE_GOOGLECAPCHA_SITEKEY;
   const recaptchaRef = useRef();
-  const [captchaToken, setCaptchaToken] = useState(null);
 
   useEffect(() => {
     // We wait a fraction of a second to ensure the page has finished rendering
@@ -89,40 +90,29 @@ const Contact = ({ data }) => {
       },
     });
   };
-  //Google Recapcha
-  const onChange = (value) => {
-    setCaptchaToken(value);
-  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (!captchaToken) {
-      AlertGooglerecapcha();
-      return;
-    }
+    const token = await recaptchaRef.current.executeAsync();
+    recaptchaRef.current.reset();
 
     const formData = new FormData(form.current);
     const payload = Object.fromEntries(formData.entries());
+    // Add the reCAPTCHA token to your form payload
+    payload.recaptchaToken = token;
 
     try {
       const result = await sendContactEmail(payload);
 
       if (result.success) {
         AlertSuccess();
-        // reset the form after submit
-        setCaptchaToken(null);
-        recaptchaRef.current.reset();
         e.target.reset();
       } else {
         AlertFail(result.error);
-        setCaptchaToken(null);
-        recaptchaRef.current.reset();
       }
     } catch (error) {
       AlertFail("Network error, please try again.");
-      setCaptchaToken(null);
-      recaptchaRef.current.reset();
     }
   };
   return (
@@ -356,8 +346,8 @@ const Contact = ({ data }) => {
               <div className="mb-6 hover:cursor-pointer">
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_CE_GOOGLECAPCHA_SITEKEY}
-                  onChange={onChange}
+                  size="invisible"
+                  sitekey={recaptchaSiteKey}
                 />
               </div>
 

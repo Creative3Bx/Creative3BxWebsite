@@ -87,7 +87,7 @@ const App = ({ Component, pageProps }) => {
             s.parentNode.insertBefore(g,s);
             g.onload=function(){
               window.chatwootSDK.run({
-                websiteToken: "${process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN}",
+                websiteToken: "${process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE}",
                 baseUrl: BASE_URL
               })
             }
