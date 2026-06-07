@@ -34,14 +34,14 @@ export default async function handler(req, res) {
       }
 
       const internalTask = resend.emails.send({
-        from: "Creative3Bx System <support@creative3bx.com>",
-        to: ["Admin@Creative3bx.com"],
+        from: "Creative3Bx System <support@creative3bx.com.au>",
+        to: ["Admin@creative3bx.com.au"],
         subject: `Growth Alert: New Newsletter Subscriber`,
         ...getNewsletterInternalTemplate(from_email),
       });
 
       const welcomeTask = resend.emails.send({
-        from: "Creative3Bx <support@creative3bx.com>",
+        from: "Creative3Bx <support@creative3bx.com.au>",
         to: [from_email],
         subject: `Welcome to the Creative3Bx Inner Circle!`,
         ...getNewsletterWelcomeTemplate(from_email),
@@ -86,8 +86,8 @@ export default async function handler(req, res) {
 
     // 1. Internal Notification (To Admin)
     const internalEmailTask = resend.emails.send({
-      from: "Creative3Bx Contact <support@creative3bx.com>",
-      to: ["Admin@Creative3bx.com"],
+      from: "Creative3Bx Contact <support@creative3bx.com.au>",
+      to: ["Admin@creative3bx.com.au"],
       replyTo: from_email,
       subject: emailSubject,
       ...internalTemplate,
@@ -95,7 +95,7 @@ export default async function handler(req, res) {
 
     // 2. Automatic Acknowledgment (To Customer)
     const acknowledgmentEmailTask = resend.emails.send({
-      from: "Creative3Bx Support <support@creative3bx.com>",
+      from: "Creative3Bx Support <support@creative3bx.com.au>",
       to: [from_email],
       subject: `We've received your message - Creative3Bx Support`,
       ...customerTemplate,
