@@ -103,13 +103,13 @@ const App = ({ Component, pageProps }) => {
                 "@context": "https://schema.org",
                 "@type": "ProfessionalService",
                 name: "Creative3Bx IT Services",
-                url: "https://creative3bx.com",
-                logo: "https://creative3bx.com/images/Logo-Creative3BxDark.svg",
+                url: "https://creative3bx.com.au",
+                logo: "https://creative3bx.com.au/images/Logo-Creative3BxDark.svg",
                 contactPoint: {
                   "@type": "ContactPoint",
                   telephone: "+61 494 743 131",
                   contactType: "customer service",
-                  email: "Admin@Creative3bx.com",
+                  email: "Admin@creative3bx.com.au",
                 },
               }),
             }}
