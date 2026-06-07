@@ -71,70 +71,48 @@ const App = ({ Component, pageProps }) => {
           `,
         }}
       />
+      <Head>
+        {/* Dynamically build JSON-LD from config */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              name: config.site.title,
+              url: config.site.base_url,
+              logo: `${config.site.base_url}${config.site.logo}`,
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "+61 494 743 131",
+                contactType: "customer service",
+                email:
+                  config.params.copyrightCompanyName.split("Contact us: ")[1],
+              },
+            }),
+          }}
+        />
+        {/* google font css */}
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `${fontcss}`,
+          }}
+        />
+        {/* responsive meta */}
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=5"
+        />
+      </Head>
       <JsonContext>
-        <Script id="chatwoot-settings" strategy="afterInteractive">
-          {`
-          window.chatwootSettings = {
-            hideMessageBubble: true,
-            position: 'right',
-            type: 'standard',
-          };
-          (function(d,t) {
-            var BASE_URL="https://app.chatwoot.com";
-            var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=BASE_URL+"/packs/js/sdk.js";
-            g.async = true;
-            s.parentNode.insertBefore(g,s);
-            g.onload=function(){
-              window.chatwootSDK.run({
-                websiteToken: "${process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE}",
-                baseUrl: BASE_URL
-              })
-            }
-          })(document,"script");
-        `}
-        </Script>
-        {loading && <Loader />}
-        <Head>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "ProfessionalService",
-                name: "Creative3Bx IT Services",
-                url: "https://creative3bx.com.au",
-                logo: "https://creative3bx.com.au/images/Logo-Creative3BxDark.svg",
-                contactPoint: {
-                  "@type": "ContactPoint",
-                  telephone: "+61 494 743 131",
-                  contactType: "customer service",
-                  email: "Admin@creative3bx.com.au",
-                },
-              }),
-            }}
-          />
-        </Head>
         <ContextProvider>
-          <Head>
-            {/* google font css */}
-            <link
-              rel="preconnect"
-              href="https://fonts.gstatic.com"
-              crossOrigin="true"
-            />
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `${fontcss}`,
-              }}
-            />
-            {/* responsive meta */}
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1, maximum-scale=5"
-            />
-          </Head>
-          <ThemeProvider attribute="class" defaultTheme="dark">
+          {loading && <Loader />}
+          <ThemeProvider attribute="class" defaultTheme={default_theme}>
             <Component {...pageProps} />
           </ThemeProvider>
           <SupportEngine />

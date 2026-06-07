@@ -39,7 +39,7 @@ export const getSupportChatFailureTemplate = (data) => {
                 Immediate Action: Chat Failover Triggered
               </div>
               <div class="header">
-                <img src="https://creative3bx.com/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="180" style="display: block; margin: 0 auto;">
+                <img src="https://creative3bx.com.au/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="180" style="display: block; margin: 0 auto;">
               </div>
               <div class="content">
                 <h1 class="h1">Chat System Interrupted</h1>

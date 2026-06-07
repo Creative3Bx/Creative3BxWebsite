@@ -4,7 +4,7 @@ export const getNewsletterWelcomeTemplate = (email) => {
   const text = `
         Welcome to the Creative3Bx Inner Circle!
         Thank you for joining our community. We are excited to share tech insights, tips, and updates with you.
-        Visit us at creative3bx.com to learn more.
+        Visit us at creative3bx.com.au to learn more.
       `;
 
   const html = `
@@ -34,7 +34,7 @@ export const getNewsletterWelcomeTemplate = (email) => {
           <body>
             <div class="container">
               <div class="header">
-                <img src="https://creative3bx.com/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="180" style="display: block; margin: 0 auto;">
+                <img src="https://creative3bx.com.au/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="180" style="display: block; margin: 0 auto;">
               </div>
               <div class="card">
                 <div class="content">
@@ -48,7 +48,7 @@ export const getNewsletterWelcomeTemplate = (email) => {
                     <p>In the meantime, feel free to explore our latest thought-leadership articles:</p>
                     
                     <div style="text-align: center; margin: 35px 0;">
-                      <a href="https://creative3bx.com" class="btn">Access Insights</a>
+                      <a href="https://creative3bx.com.au" class="btn">Access Insights</a>
                     </div>
 
                     <p>We pride ourselves on providing high-value content. If there is a specific topic you want us to cover, simply reply to this email.</p>

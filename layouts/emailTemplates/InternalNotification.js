@@ -60,7 +60,7 @@ export const getInternalNotificationTemplate = (data) => {
                 ${bannerText}
               </div>
               <div class="header">
-                <img src="https://creative3bx.com/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="200" style="display: block; margin: 0 auto;">
+                <img src="https://creative3bx.com.au/images/Logo-Creative3BxDark.svg" alt="Creative3Bx" width="200" style="display: block; margin: 0 auto;">
               </div>
               <div class="content">
                 <h1 class="h1">New Lead Inquiry</h1>
