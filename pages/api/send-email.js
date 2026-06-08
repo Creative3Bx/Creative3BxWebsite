@@ -39,14 +39,14 @@ export default async function handler(req, res) {
         to: [internalToEmail],
         subject: `Growth Alert: New Newsletter Subscriber`,
         ...getNewsletterInternalTemplate(from_email),
-      );
+      });
 
       const welcomeTask = resend.emails.send({
         from: "Creative3Bx <NoReply@creative3bx.com.au>",
         to: [from_email],
         subject: `Welcome to the Creative3Bx Inner Circle!`,
         ...getNewsletterWelcomeTemplate(from_email),
-      );
+      });
 
       const [internalResult, welcomeResult] = await Promise.all([
         internalTask,
