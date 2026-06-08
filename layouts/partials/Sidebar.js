@@ -34,6 +34,7 @@ const Sidebar = ({ posts, categories, className }) => {
             src="/images/map.svg"
             fill={true}
             alt="bg-map"
+            priority
           />
           <Logo />
           {markdownify(about.content, "p", "mt-8")}

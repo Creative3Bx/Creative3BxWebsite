@@ -1,12 +1,15 @@
 export const getSupportChatFailureTemplate = (data) => {
-  const { from_name, from_email, from_phone, status } = data;
+  const { from_name, from_email, from_phone, status, message } = data;
   const currentYear = new Date().getFullYear();
 
   const text = `
         CRITICAL: Live Chat Failed - Direct Action Required
         From: ${from_name} (${from_email})
         Phone: ${from_phone || "Not Provided"}
-        The user attempted to start a live chat session, but the connection to the widget failed. 
+        Reason: ${
+          message ||
+          "The user attempted to start a live chat session, but the connection to the widget failed."
+        }
         Please contact this user immediately.
       `;
 
@@ -67,7 +70,10 @@ export const getSupportChatFailureTemplate = (data) => {
                   </table>
                 </div>
 
-                <p style="font-size: 14px; color: #4a5568;">Technical Context: The user successfully submitted the pre-chat form, but the widget failed to toggle open. The data above was captured via the failover bridge.</p>
+                <p style="font-size: 14px; color: #4a5568;">Technical Context: ${
+                  message ||
+                  "The user successfully submitted the pre-chat form, but the widget failed to toggle open. The data above was captured via the failover bridge."
+                }</p>
 
                 <div style="text-align: left;">
                   <a href="mailto:${from_email}" class="btn">Reply via Email Now</a>

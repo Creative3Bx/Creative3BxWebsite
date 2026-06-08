@@ -18,6 +18,7 @@ const Post = ({ post }) => {
             alt={post.frontmatter.title}
             width={405}
             height={208}
+            style={{ height: "auto" }}
           />
         )}
         <ul className="absolute left-2 top-3 flex flex-wrap items-center">

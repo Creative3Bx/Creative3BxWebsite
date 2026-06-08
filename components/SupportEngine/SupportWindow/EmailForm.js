@@ -16,14 +16,16 @@ const EmailForm = (props) => {
   const [emailError, setEmailError] = useState("");
   const form = useRef();
 
-  const sendSupportNotification = async (statusSource) => {
+  const sendSupportNotification = async (statusSource, errorReason = "") => {
     const payload = {
       from_name: firstName,
       from_email: email,
       from_phone: phone,
       message:
         statusSource === "live_chat_failure"
-          ? "Initial Support Contact - Chatwoot Identification Failed."
+          ? `Initial Support Contact - Chatwoot Identification Failed. Reason: ${
+              errorReason || "Unknown"
+            }`
           : "User started a live chat session via Support Window.",
       source: statusSource,
     };
@@ -52,7 +54,8 @@ const EmailForm = (props) => {
     setEmailError("");
 
     try {
-      if (window.$chatwoot) {
+      // More robust check for Chatwoot
+      if (window.$chatwoot && typeof window.$chatwoot.setUser === "function") {
         // 1. Identify user in Chatwoot
         window.$chatwoot.setUser(email, {
           email: email,
@@ -65,13 +68,16 @@ const EmailForm = (props) => {
         await sendSupportNotification("live_chat_success");
         // 4. Signal parent to close our custom EmailForm window
         if (props.onComplete) props.onComplete();
+      } else {
+        // If Chatwoot is not available, throw an error to trigger the fallback.
+        throw new Error("Chatwoot SDK not found.");
       }
     } catch (e) {
       setEmailError(
         "Could not connect to live chat. Your message has been sent to our support team via email instead."
       );
       // Send a backup notification email only on error. This is our "log".
-      await sendSupportNotification("live_chat_failure");
+      await sendSupportNotification("live_chat_failure", e.message);
     } finally {
       setLoading(false);
     }
