@@ -8,7 +8,7 @@ banner:
   video: "https://drive.google.com/uc?export=view&id=1kj8J9MYSeExnqxSpaG8WIA3F8im5eHyF"
   contactButton:
     label: Contact us
-    link: /contact
+    link: /contact#contact-form
     rel: ""
   servicesButton:
     label: Our Services
