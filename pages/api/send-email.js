@@ -33,21 +33,33 @@ export default async function handler(req, res) {
           .json({ success: false, error: "Email is required." });
       }
 
+      const internalToEmail = "admin@creative3bx.com"; // Define admin email once
       const internalTask = resend.emails.send({
-        from: "Creative3Bx System <support@creative3bx.com.au>",
-        to: ["Admin@creative3bx.com.au"],
+        from: "Creative3Bx System <NoReply@creative3bx.com.au>",
+        to: [internalToEmail],
         subject: `Growth Alert: New Newsletter Subscriber`,
         ...getNewsletterInternalTemplate(from_email),
       });
 
       const welcomeTask = resend.emails.send({
-        from: "Creative3Bx <support@creative3bx.com.au>",
+        from: "Creative3Bx <NoReply@creative3bx.com.au>",
         to: [from_email],
         subject: `Welcome to the Creative3Bx Inner Circle!`,
         ...getNewsletterWelcomeTemplate(from_email),
       });
 
-      await Promise.all([internalTask, welcomeTask]);
+      const [internalResult, welcomeResult] = await Promise.all([
+        internalTask,
+        welcomeTask,
+      ]);
+
+      if (internalResult.error || welcomeResult.error) {
+        const errorMessage =
+          internalResult.error?.message ||
+          welcomeResult.error?.message ||
+          "Failed to send one or more newsletter emails.";
+        throw new Error(errorMessage);
+      }
       return res
         .status(200)
         .json({ success: true, message: "Subscription confirmed" });
@@ -86,8 +98,8 @@ export default async function handler(req, res) {
 
     // 1. Internal Notification (To Admin)
     const internalEmailTask = resend.emails.send({
-      from: "Creative3Bx Contact <support@creative3bx.com.au>",
-      to: ["Admin@creative3bx.com.au"],
+      from: "Creative3Bx Contact <NoReply@creative3bx.com.au>",
+      to: ["admin@creative3bx.com"],
       replyTo: from_email,
       subject: emailSubject,
       ...internalTemplate,
@@ -95,7 +107,7 @@ export default async function handler(req, res) {
 
     // 2. Automatic Acknowledgment (To Customer)
     const acknowledgmentEmailTask = resend.emails.send({
-      from: "Creative3Bx Support <support@creative3bx.com.au>",
+      from: "Creative3Bx Support <NoReply@creative3bx.com.au>",
       to: [from_email],
       subject: `We've received your message - Creative3Bx Support`,
       ...customerTemplate,
@@ -107,18 +119,23 @@ export default async function handler(req, res) {
       acknowledgmentEmailTask,
     ]);
 
-    if (adminRes.error) {
-      return res
-        .status(400)
-        .json({ success: false, error: adminRes.error.message });
+    // Check for errors in either task
+    if (adminRes.error || customerRes.error) {
+      const errorMessage =
+        adminRes.error?.message ||
+        customerRes.error?.message ||
+        "One or more emails failed to send.";
+      return res.status(400).json({ success: false, error: errorMessage });
     }
 
     return res.status(200).json({
       success: true,
       message: "Notification and Acknowledgment sent successfully",
-      data: adminRes.data,
+      data: { adminEmail: adminRes.data, customerEmail: customerRes.data },
     });
   } catch (error) {
+    // This catch block handles errors from Promise.all or any other synchronous errors
+    // It's crucial for catching failures from resend.emails.send if they reject the promise.
     return res
       .status(500)
       .json({ success: false, error: "Internal server error." });
