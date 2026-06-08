@@ -3,6 +3,7 @@ import { FaEnvelope } from "react-icons/fa";
 import { sendContactEmail } from "../../layouts/sendEmail";
 
 function CustomForm({ status, message, onValidated }) {
+  // onValidated is kept for Mailchimp
   const [email, setEmail] = useState("");
   const [localStatus, setLocalStatus] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -14,7 +15,11 @@ function CustomForm({ status, message, onValidated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || email.indexOf("@") === -1) return;
+    if (!email || email.indexOf("@") === -1) {
+      setErrorMessage("Please enter a valid email address.");
+      setLocalStatus("error");
+      return;
+    }
 
     setLocalStatus("sending");
     setErrorMessage("");
@@ -29,7 +34,7 @@ function CustomForm({ status, message, onValidated }) {
         setLocalStatus("success");
         resetForm();
         // Maintain compatibility with parent wrappers (like Mailchimp)
-        if (onValidated) onValidated({ EMAIL: email });
+        onValidated && onValidated({ EMAIL: email });
       } else {
         setErrorMessage(result.error || "An unknown error occurred.");
         setLocalStatus("error");
@@ -40,7 +45,12 @@ function CustomForm({ status, message, onValidated }) {
     }
   };
 
+  // Prioritize local status for immediate feedback, but fall back to prop status
   const displayStatus = localStatus || status;
+  // Use the message from Mailchimp if it's an error and we don't have a local one
+  const displayMessage =
+    errorMessage ||
+    (typeof message === "string" ? message.replace(/<[^>]*>?/gm, "") : "");
 
   return (
     <>
@@ -59,7 +69,7 @@ function CustomForm({ status, message, onValidated }) {
           />
         </fieldset>
         <button className="d-block  btn btn-primary mt-4 w-full" type="submit">
-          Sign In
+          Subscribe
         </button>
       </form>
       {displayStatus === "sending" && (
@@ -67,7 +77,7 @@ function CustomForm({ status, message, onValidated }) {
       )}
       {displayStatus === "error" && (
         <div className="mt-4 text-red-700">
-          {errorMessage || "Error subscribing. Please try again."}
+          {displayMessage || "An error occurred. Please try again."}
         </div>
       )}
       {displayStatus === "success" && (
