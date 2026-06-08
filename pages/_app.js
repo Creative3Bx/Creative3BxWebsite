@@ -52,6 +52,11 @@ const App = ({ Component, pageProps }) => {
   Router.events.on("routeChangeComplete", (url) => {
     setLoading(false);
   });
+
+  const chatwootWebsiteToken =
+    process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN ||
+    process.env.NEXT_PUBLIC_CHATWOOT_WEBSITE;
+
   return (
     <>
       {/* Google Tag Manager - Global site tag */}
@@ -71,6 +76,36 @@ const App = ({ Component, pageProps }) => {
           `,
         }}
       />
+      {/* Chatwoot Widget Script - Only render if token is present */}
+      {chatwootWebsiteToken && (
+        <Script
+          id="chatwoot-sdk"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.chatwootSettings = {
+                hideMessageBubble: true,
+                baseUrl: "https://app.chatwoot.com"
+              };
+
+              (function(d,t) {
+                var BASE_URL = "https://app.chatwoot.com";
+                var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+                g.src = BASE_URL + "/packs/js/sdk.js";
+                g.defer = true;
+                g.async = true;
+                s.parentNode.insertBefore(g,s);
+                g.onload = function(){
+                  window.chatwootSDK.run({
+                    websiteToken: '${chatwootWebsiteToken}',
+                    baseUrl: BASE_URL
+                  })
+                }
+              })(document,"script");
+            `,
+          }}
+        />
+      )}
       <Head>
         {/* Dynamically build JSON-LD from config */}
         <script

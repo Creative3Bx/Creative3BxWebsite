@@ -145,6 +145,7 @@ const Home = ({
                     width={548}
                     height={443}
                     priority={true}
+                    style={{ height: "auto" }}
                     alt="Banner Image"
                   />
                 </animated.div>
