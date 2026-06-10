@@ -23,20 +23,6 @@ export const styles = {
     width: "100%",
     height: "100%",
   },
-  avatarHello: {
-    position: "absolute",
-    left: "calc(-100% - 44px - 28px)",
-    top: "calc(50% - 24px)",
-    // Layering
-    zIndex: "10000",
-    boxShadow: "0px 0px 16px 6px rgba(0, 0, 0, 0.33)",
-    // Border
-    padding: "12px 12px 12px 16px",
-    borderRadius: "24px",
-    // Color
-    backgroundColor: "#f9f0ff",
-    color: "black",
-  },
   avatarNotifyMessage: {
     // Position
     position: "absolute",
@@ -55,7 +41,6 @@ export const styles = {
     backgroundColor: "#dcdee2",
     color: "black",
   },
-  tooltiptext: {},
   supportWindow: {
     position: "fixed",
     bottom: "116px",
@@ -69,20 +54,6 @@ export const styles = {
     border: "2px solid #7f1d1d",
     overflow: "hidden",
     boxShadow: "0px 0px 16px 6px rgba(0, 0, 0, 0.33)",
-  },
-
-  chatContent: {
-    flex: "1",
-    overflow: "auto",
-    padding: "20px",
-    height: "100%", // Adjust the height as needed
-    overflowY: "scroll",
-    paddingRight: "15px",
-  },
-  chatFooter: {
-    flex: "none",
-    padding: "10px",
-    backgroundColor: "#f5f5f5",
   },
   emailFormWindow: {
     width: "100%",
@@ -151,12 +122,6 @@ export const styles = {
     left: "calc(50% - 51px)",
     fontWeight: "600",
   },
-  chatEngineWindow: {
-    width: "100%",
-    height: "300px",
-    overflow: "hidden",
-    backgroundColor: "#fff",
-  },
   ChatNotificationImage: {
     cursor: "pointer",
     backgroundRepeat: "no-repeat",
@@ -167,24 +132,6 @@ export const styles = {
     height: "40px",
     // Position
     position: "absolute",
-  },
-  closeWindowButton: {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    color: "#eeb42b",
-    fontSize: "18px",
-    position: "absolute",
-    // top: '230px',
-    // right: '-80px',
-    // zIndex: 1,
-    // minWidth: '150px',
-    // // Media query for mobile devices
-    // '@media (max-width: 780px)': {
-    //   top: '20px', // Adjust the top position for mobile devices
-    //   right: '100px', // Adjust the right position for mobile devices
-    //   minWidth: 'unset', // Remove the minimum width for mobile devices
-    // },
   },
 
   errorEmailForm: {
