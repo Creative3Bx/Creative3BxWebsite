@@ -1,18 +1,37 @@
 import config from "@config/config.json";
 import Base from "@layouts/Baseof";
 import dateFormat from "@lib/utils/dateFormat";
-import { markdownify, slugify } from "@lib/utils/textConverter";
-import { DiscussionEmbed } from "disqus-react";
+import dynamic from "next/dynamic";
 import { MDXRemote } from "next-mdx-remote";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { FaRegCalendar, FaUserAlt } from "react-icons/fa";
-import Post from "./partials/Post";
 import Sidebar from "./partials/Sidebar";
 import shortcodes from "./shortcodes/all";
-const { disqus } = config;
+import RelatedPosts from "./partials/RelatedPosts";
+import { markdownify, slugify } from "@lib/utils/textConverter";
+const { hyvor_talk } = config;
 const { meta_author } = config.metadata;
+
+// Dynamically import the Hyvor Talk Embed component with SSR turned off
+// We are now directly injecting the script and using the native web component.
+// The React wrapper is no longer used.
+const HyvorTalkEmbed = dynamic(
+  () =>
+    Promise.resolve(() => {
+      // This component will be a placeholder for the web component,
+      // as the actual rendering is handled by the browser after script injection.
+      return (
+        <div id="hyvor-talk-view-container">
+          <p className="mt-16">Loading comments...</p>
+        </div>
+      );
+    }),
+  { ssr: false }
+);
 
 const PostSingle = ({
   frontmatter,
@@ -27,6 +46,28 @@ const PostSingle = ({
   description = description ? description : content.slice(0, 120);
 
   const { theme } = useTheme();
+  const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  // Effect to manage the Hyvor Talk embed script
+  useEffect(() => {
+    setIsClient(true);
+
+    // Only inject script if Hyvor Talk is enabled and we are on the client
+    if (hyvor_talk.enable && typeof window !== "undefined") {
+      const scriptId = "hyvor-talk-embed-script";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://talk.hyvor.com/embed/embed.js";
+        script.async = true;
+        document.head.appendChild(script);
+      }
+    }
+  }, []);
+
+  // Ensure the Hyvor Talk web component is only rendered if enabled and on client
+  const shouldRenderHyvorTalk = hyvor_talk.enable && isClient;
 
   return (
     <Base title={title} description={description}>
@@ -43,6 +84,7 @@ const PostSingle = ({
                       width="1000"
                       alt={title}
                       className="rounded-lg"
+                      style={{ height: "auto" }}
                     />
                   )}
                   <ul className="absolute left-2 top-3 flex flex-wrap items-center">
@@ -82,12 +124,16 @@ const PostSingle = ({
                 </div>
               </article>
               <div className="mt-16">
-                {disqus.enable && (
-                  <DiscussionEmbed
-                    key={theme}
-                    shortname={disqus.shortname}
-                    config={config.disqus.settings}
-                  />
+                {/* Hyvor Talk Comments */}
+                {shouldRenderHyvorTalk && (
+                  // Directly render the native Hyvor Talk web component
+                  // The script injected in useEffect will find and populate this.
+                  <hyvor-talk-comments
+                    website-id={hyvor_talk.website_id}
+                    page-id={slug} // Use page-id for the web component
+                    colorscheme={theme === "dark" ? "dark" : "light"} // Use colorscheme for the web component
+                    key={router.asPath} // Force re-render on navigation
+                  ></hyvor-talk-comments>
                 )}
               </div>
             </div>
@@ -95,17 +141,7 @@ const PostSingle = ({
           </div>
         </div>
 
-        {/* Related posts */}
-        <div className="container mt-20">
-          <h2 className="section-title">Related Posts</h2>
-          <div className="row mt-16">
-            {relatedPosts.slice(0, 3).map((post, index) => (
-              <div key={"post-" + index} className="mb-12 lg:col-4">
-                <Post post={post} />
-              </div>
-            ))}
-          </div>
-        </div>
+        <RelatedPosts posts={relatedPosts} />
       </section>
     </Base>
   );

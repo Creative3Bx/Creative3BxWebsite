@@ -16,6 +16,7 @@
     "@emailjs/browser": "^3.10.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@hyvor/hyvor-talk-react": "^1.0.2",
     "@nextui-org/react": "^1.0.0-beta.12",
     "@react-spring/web": "^10.1.0",
     "axios": "^1.4.0",
