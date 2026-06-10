@@ -48,9 +48,8 @@
       "mailchimp_url": "https://example.com"
     }
   },
-  "disqus": {
+  "hyvor_talk": {
     "enable": true,
-    "shortname": "creative3bx",
-    "settings": {}
+    "website_id": 15529
   }
 }

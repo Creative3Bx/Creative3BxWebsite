@@ -28,7 +28,7 @@ Social media platforms provide a great opportunity to reach your target audience
 More than half of all online shopping is done on mobile devices. Make sure your website and checkout process are mobile-optimized to offer a seamless shopping experience for customers on-the-go.
 
 ![alter-text](/images/postsImgs/ImportanceOfGoogleReviews.png)
-*Google Reviews Improtance*
+_Google Reviews Improtance_
 
 ## Use Email Marketing
 
@@ -50,14 +50,13 @@ Offer multiple payment options to make the checkout process as frictionless as p
 
 High-quality, relevant content can attract customers to your website and help establish your brand as an authority in your niche. This could be blog posts, how-to guides, or video content.
 
-##  Consider Subscription Models
+## Consider Subscription Models
 
 Subscription models offer a steady income stream and increase customer retention. If applicable to your business, consider offering subscription-based services or products.
 
 These strategies can help SMBs not just survive but thrive in the digital landscape. However, remember that e-commerce success doesn't happen overnight. Consistent testing, analysis, and adaptation are required to find what works best for your specific business and customer base.
 
-
 > These strategies, continuously tested and adapted based on analysis, can help businesses thrive in the digital e-commerce landscape.
 
 ![alter-text](/images/postsImgs/WhatWeCanDoForYou2.png)
-*Example Caption*
+_We can Help_
