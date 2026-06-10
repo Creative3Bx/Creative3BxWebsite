@@ -1,7 +1,6 @@
 import React from "react";
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
-import { ContextProvider } from "../context";
 import config from "@config/config.json";
 import theme from "@config/theme.json";
 import { useEffect, useState } from "react";
@@ -145,13 +144,11 @@ const App = ({ Component, pageProps }) => {
         />
       </Head>
       <JsonContext>
-        <ContextProvider>
-          {loading && <Loader />}
-          <ThemeProvider attribute="class" defaultTheme={default_theme}>
-            <Component {...pageProps} />
-          </ThemeProvider>
-          <SupportEngine />
-        </ContextProvider>
+        {loading && <Loader />}
+        <ThemeProvider attribute="class" defaultTheme={default_theme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
+        <SupportEngine />
       </JsonContext>
     </>
   );
